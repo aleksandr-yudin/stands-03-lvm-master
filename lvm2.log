@@ -1,0 +1,1318 @@
+Script started on 2020-02-24 14:42:53+0300
+]0;root@MSK-IT: /home/ayudin/stands-03-lvm-masterroot@MSK-IT:/home/ayudin/stands-03-lvm-master# vagrant ssh
+Last login: Mon Feb 24 11:38:57 2020 from 10.0.2.2
+]0;vagrant@lvm:~[?1034h[vagrant@lvm ~]$ sudu su
+-bash: sudu: command not found
+]0;vagrant@lvm:~[vagrant@lvm ~]$ sudu su[1P suo su[C[C[C
+]0;root@lvm:/home/vagrant[?1034h[root@lvm vagrant]# lsblk
+NAME                    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                       8:0    0   40G  0 disk 
+├─sda1                    8:1    0    1M  0 part 
+├─sda2                    8:2    0    1G  0 part /boot
+└─sda3                    8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00 253:0    0 37.5G  0 lvm  /
+  └─VolGroup00-LogVol01 253:1    0  1.5G  0 lvm  [SWAP]
+sdb                       8:16   0   10G  0 disk 
+sdc                       8:32   0    2G  0 disk 
+sdd                       8:48   0    1G  0 disk 
+sde                       8:64   0    1G  0 disk 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# pvcreate /devq[K/sda3 [K[K[Kb
+  Physical volume "/dev/sdb" successfully created.
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# vgcreate vg_root /dev/sdb
+  Volume group "vg_root" successfully created
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lvcreate -n lv_[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Klvcreate -n lv_root -l +100%FREE /dev/vg_root
+WARNING: ext4 signature detected on /dev/vg_root/lv_root at offset 1080. Wipe it? [y/n]: y
+  Wiping ext4 signature on /dev/vg_root/lv_root.
+  Logical volume "lv_root" created.
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lvs
+  LV       VG         Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  LogVol00 VolGroup00 -wi-ao---- <37.47g                                                    
+  LogVol01 VolGroup00 -wi-ao----   1.50g                                                    
+  lv_root  vg_root    -wi-a----- <10.00g                                                    
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mkfsq[K.xfs /dev/vg_root/lv_root 
+meta-data=/dev/vg_root/lv_root   isize=512    agcount=4, agsize=655104 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0, sparse=0
+data     =                       bsize=4096   blocks=2620416, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=2560, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# df -h
+Filesystem                       Size  Used Avail Use% Mounted on
+/dev/mapper/VolGroup00-LogVol00   38G  814M   37G   3% /
+devtmpfs                         109M     0  109M   0% /dev
+tmpfs                            118M     0  118M   0% /dev/shm
+tmpfs                            118M  4.5M  114M   4% /run
+tmpfs                            118M     0  118M   0% /sys/fs/cgroup
+/dev/sda2                       1014M   63M  952M   7% /boot
+tmpfs                             24M     0   24M   0% /run/user/1000
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mount /dev/vg_root/lv+[K_root /mnt
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mount /dev/vg_root/lv_root /mnt[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cdf -h[K
+Filesystem                       Size  Used Avail Use% Mounted on
+/dev/mapper/VolGroup00-LogVol00   38G  814M   37G   3% /
+devtmpfs                         109M     0  109M   0% /dev
+tmpfs                            118M     0  118M   0% /dev/shm
+tmpfs                            118M  4.5M  114M   4% /run
+tmpfs                            118M     0  118M   0% /sys/fs/cgroup
+/dev/sda2                       1014M   63M  952M   7% /boot
+tmpfs                             24M     0   24M   0% /run/user/1000
+/dev/mapper/vg_root-lv_root       10G   33M   10G   1% /mnt
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# xfsdump -J - /dev/VolGroup00/LogVol00 | xfsrestore -J - /mnt
+xfsdump: using file dump (drive_simple) strategy
+xfsdump: version 3.1.7 (dump format 3.0)
+xfsdump: level 0 dump of lvm:/
+xfsdump: dump date: Mon Feb 24 11:46:57 2020
+xfsdump: session id: e3568412-0f90-48ef-8634-3dfc4d872b1c
+xfsdump: session label: ""
+xfsrestore: using file dump (drive_simple) strategy
+xfsrestore: version 3.1.7 (dump format 3.0)
+xfsrestore: searching media for dump
+xfsdump: ino map phase 1: constructing initial dump list
+xfsdump: ino map phase 2: skipping (no pruning necessary)
+xfsdump: ino map phase 3: skipping (only one dump stream)
+xfsdump: ino map construction complete
+xfsdump: estimated dump size: 812911488 bytes
+xfsdump: creating dump session media file 0 (media 0, file 0)
+xfsdump: dumping ino map
+xfsdump: dumping directories
+xfsrestore: examining media file 0
+xfsrestore: dump description: 
+xfsrestore: hostname: lvm
+xfsrestore: mount point: /
+xfsrestore: volume: /dev/mapper/VolGroup00-LogVol00
+xfsrestore: session time: Mon Feb 24 11:46:57 2020
+xfsrestore: level: 0
+xfsrestore: session label: ""
+xfsrestore: media label: ""
+xfsrestore: file system id: b60e9498-0baa-4d9f-90aa-069048217fee
+xfsrestore: session id: e3568412-0f90-48ef-8634-3dfc4d872b1c
+xfsrestore: media id: 93cf8f6c-e660-4992-83ba-542b85e60f49
+xfsrestore: searching media for directory dump
+xfsrestore: reading directories
+xfsdump: dumping non-directory files
+xfsrestore: 3170 directories and 27071 entries processed
+xfsrestore: directory post-processing
+xfsrestore: restoring non-directory files
+xfsdump: ending media file
+xfsdump: media file size 784937976 bytes
+xfsdump: dump size (non-dir files) : 769674216 bytes
+xfsdump: dump complete: 8 seconds elapsed
+xfsdump: Dump Status: SUCCESS
+xfsrestore: restore complete: 8 seconds elapsed
+xfsrestore: Restore Status: SUCCESS
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# cd [K[K[Kls .[K/mnt
+[0m[38;5;51mbin[0m   [38;5;27mdev[0m  [38;5;27mhome[0m  [38;5;51mlib64[0m  [38;5;27mmnt[0m  [38;5;27mproc[0m  [38;5;27mrun[0m   [38;5;27msrv[0m  [48;5;10;38;5;16mtmp[0m  [38;5;27mvagrant[0m
+[38;5;27mboot[0m  [38;5;27metc[0m  [38;5;51mlib[0m   [38;5;27mmedia[0m  [38;5;27mopt[0m  [38;5;27mroot[0m  [38;5;51msbin[0m  [38;5;27msys[0m  [38;5;27musr[0m  [38;5;27mvar[0m
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# for i in /proc/ /sys/ /dev/ /run/ /boot/; do mount --bind $i /mnt/$i; done
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# chroot /mnt/
+]0;root@lvm:/[?1034h[root@lvm /]# grub2-mkconfig -o /boot/grub2/grub.cfg
+Generating grub configuration file ...
+Found linux image: /boot/vmlinuz-3.10.0-862.2.3.el7.x86_64
+Found initrd image: /boot/initramfs-3.10.0-862.2.3.el7.x86_64.img
+done
+]0;root@lvm:/[root@lvm /]# cd /boot ; for i in `ls initramfs-*img`; do dracut -v $i `echo $i|sed "s/initramfs-//g; s/.img/ /g"` --force; done
+Executing: /sbin/dracut -v initramfs-3.10.0-862.2.3.el7.x86_64.img 3.10.0-862.2.3.el7.x86_64 --force
+dracut module 'busybox' will not be installed, because command 'busybox' could not be found!
+dracut module 'crypt' will not be installed, because command 'cryptsetup' could not be found!
+dracut module 'dmraid' will not be installed, because command 'dmraid' could not be found!
+dracut module 'dmsquash-live-ntfs' will not be installed, because command 'ntfs-3g' could not be found!
+dracut module 'multipath' will not be installed, because command 'multipath' could not be found!
+dracut module 'busybox' will not be installed, because command 'busybox' could not be found!
+dracut module 'crypt' will not be installed, because command 'cryptsetup' could not be found!
+dracut module 'dmraid' will not be installed, because command 'dmraid' could not be found!
+dracut module 'dmsquash-live-ntfs' will not be installed, because command 'ntfs-3g' could not be found!
+dracut module 'multipath' will not be installed, because command 'multipath' could not be found!
+*** Including module: bash ***
+*** Including module: nss-softokn ***
+*** Including module: i18n ***
+*** Including module: drm ***
+*** Including module: plymouth ***
+*** Including module: dm ***
+Skipping udev rule: 64-device-mapper.rules
+Skipping udev rule: 60-persistent-storage-dm.rules
+Skipping udev rule: 55-dm.rules
+*** Including module: kernel-modules ***
+Omitting driver floppy
+*** Including module: lvm ***
+Skipping udev rule: 64-device-mapper.rules
+Skipping udev rule: 56-lvm.rules
+Skipping udev rule: 60-persistent-storage-lvm.rules
+*** Including module: qemu ***
+*** Including module: resume ***
+*** Including module: rootfs-block ***
+*** Including module: terminfo ***
+*** Including module: udev-rules ***
+Skipping udev rule: 40-redhat-cpu-hotplug.rules
+Skipping udev rule: 91-permissions.rules
+*** Including module: biosdevname ***
+*** Including module: systemd ***
+*** Including module: usrmount ***
+*** Including module: base ***
+*** Including module: fs-lib ***
+*** Including module: shutdown ***
+*** Including modules done ***
+*** Installing kernel module dependencies and firmware ***
+*** Installing kernel module dependencies and firmware done ***
+*** Resolving executable dependencies ***
+*** Resolving executable dependencies done***
+*** Hardlinking files ***
+*** Hardlinking files done ***
+*** Stripping files ***
+*** Stripping files done ***
+*** Generating early-microcode cpio image contents ***
+*** No early-microcode cpio image needed ***
+*** Store current command line parameters ***
+*** Creating image file ***
+*** Creating image file done ***
+*** Creating initramfs image file '/boot/initramfs-3.10.0-862.2.3.el7.x86_64.img' done ***
+]0;root@lvm:/boot[root@lvm boot]# nano /boot/grub2/grub.cfg 
+[?1049h[1;47r(B[m[4l[?7h[?12l[?25h[?1h=[?1h=[?1h=[39;49m[39;49m(B[m[H[2J(B[0;7m  GNU nano 2.3.1                    File: /boot/grub2/grub.cfg                                               [3;1H(B[m#[4d# DO NOT EDIT THIS FILE[5d#[6d# It is automatically generated by grub2-mkconfig using templates[7d# from /etc/grub.d and settings from /etc/default/grub[8d#[10d### BEGIN /etc/grub.d/00_header ###[11dset pager=1[13dif [ -s $prefix/grubenv ]; then[14;3Hload_env[15dfi[16dif [ "${next_entry}" ] ; then[17;4Hset default="${next_entry}"[18;4Hset next_entry=[19;4Hsave_env next_entry[20;4Hset boot_once=true[21delse[22dset default="${saved_entry}"[23dfi[25dif [ x"${feature_menuentry_id}" = xy ]; then[26;3Hmenuentry_id_option="--id"[27delse[28dmenuentry_id_option=""[29dfi[31dexport menuentry_id_option[33dif [ "${prev_saved_entry}" ]; then[34;3Hset saved_entry="${prev_saved_entry}"[35;3Hsave_env saved_entry[36;3Hset prev_saved_entry=[37;3Hsave_env prev_saved_entry[38;3Hset boot_once=true[39dfi[41dfunction savedefault {[42;3Hif [ -z "${boot_once}" ]; then[43;5Hsaved_entry="${chosen}"[44;5Hsave_env saved_entry[45;46H(B[0;7m[ Read 127 lines ][46d^G(B[m Get Help	  (B[0;7m^O(B[m WriteOut[37G(B[0;7m^R(B[m Read File[55G(B[0;7m^Y(B[m Prev Page	(B[0;7m^K(B[m Cut Text	  (B[0;7m^C(B[m Cur Pos[47d(B[0;7m^X(B[m Exit[47;19H(B[0;7m^J(B[m Justify[47;37H(B[0;7m^W(B[m Where Is[55G(B[0;7m^V(B[m Next Page	(B[0;7m^U(B[m UnCut Text     (B[0;7m^T(B[m To Spell[3d[4d[5d[6d[7d[8d[9d[10d[11d[12d[13d[14d[A[A[A[A[A[A[A[A[A[A[A[45d[K[3d[1;100H(B[0;7mModified[3d(B[mW##[K[45d(B[0;7mSearch:                                                                                                      [46;20HY(B[m First Line[38G(B[0;7mT(B[m Go To Line[56G(B[0;7mW(B[m Beg of Par     (B[0;7mM-J(B[m FullJstify    (B[0;7mM-B(B[m Backwards[47;2H(B[0;7mC(B[m Cancel[47;20H(B[0;7mV(B[m Last Line[38G(B[0;7mR(B[m Replace [47;56H(B[0;7mO(B[m End of Par     (B[0;7mM-C(B[m Case Sens     (B[0;7mM-R(B[m Regexp[K[45;9H(B[0;7mr(B[m(B[0;7md(B[m(B[0;7m.(B[m[3d  if [ -n "${GRUB2_PASSWORD}" ]; then[4d    set superusers="root"[5d    export superusers[6d    password_pbkdf2 root ${GRUB2_PASSWORD}[K[7d  fi[K[8dfi[9d### END /etc/grub.d/01_users ###[10d[K[11d### BEGIN /etc/grub.d/10_linux ###[12dmenuentry 'CentOS Linux (3.10.0-862.2.3.el7.x86_64) 7 (Core)' --class centos --class gnu-linux --class gnu -$[13;8H[1K	load_video[K[14;8H[1K	set gfxpayload=keep[15;8H[1K	insmod gzio[16;8H[1K	insmod part_msdos[K[17;8H[1K	insmod xfs[K[18;8H[1K	set root='hd0,msdos2'[19;8H[1K	if [ x$feature_platform_search_hint = xy ]; then[20;10H[1K search --no-floppy --fs-uuid --set=root --hint-bios=hd0,msdos2 --hint-efi=hd0,msdos2 --hint-bareme$[21;8H[1K	else[22;10H[1K search --no-floppy --fs-uuid --set=root 570897ca-e759-4c81-90cf-389da6eee4cc[23;8H[1K	fi[24d$console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 elevator=noop crashkernel=auto rd.lvm.lv=Vo$[25;8H[1K	initrd16 /initramfs-3.10.0-862.2.3.el7.x86_64.img[26d}[K[27dif [ "x$default" = 'CentOS Linux (3.10.0-862.2.3.el7.x86_64) 7 (Core)' ]; then default='Advanced options for$[28;1H### END /etc/grub.d/10_linux ###[29d[K[30d### BEGIN /etc/grub.d/20_linux_xen ###[31d### END /etc/grub.d/20_linux_xen ###[33d### BEGIN /etc/grub.d/20_ppc_terminfo ###[34d### END /etc/grub.d/20_ppc_terminfo ###[35d[K[36d### BEGIN /etc/grub.d/30_os-prober ###[37d### END /etc/grub.d/30_os-prober ###[38d[K[39d### BEGIN /etc/grub.d/40_custom ###[40d# This file provides an easy way to add custom menu entries.  Simply type the[41d# menu entries you want to add after this comment.  Be careful not to change[42d# the 'exec tail' line above.[K[43d### END /etc/grub.d/40_custom ###[44d[K[45d[K[46;20H(B[0;7mO(B[m WriteOut  [38G(B[0;7mR(B[m Read File [56G(B[0;7mY(B[m Prev Page      (B[0;7m^K(B[m Cut Text       (B[0;7m^C(B[m Cur Pos[K[47;2H(B[0;7mX(B[m Exit  [47;20H(B[0;7mJ(B[m Justify  [38G(B[0;7mW(B[m Where Is[47;56H(B[0;7mV(B[m Next Page      (B[0;7m^U(B[m UnCut Text     (B[0;7m^T(B[m To Spell[24;97H[8G[1K	linux16 /vmlinuz-3.10.0-862.2.3.el7.x86_64 root=/dev/mapper/vg_root-lv_root ro no_timer_check consol[25;58H[A$console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 elevator=noop crashkernel=auto rd.lvm.lv=Vo[24;97Hrd.lvm.	v=V$.lv=VolGroup00/LogVol00 rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[K[8G	G	$console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 elevator=noop crashkernel=auto rd.lvm.lv=Vo$[24;108H[Z[Z[Z[Z[Z[Zname=	 elevat	r=noop 	rashker	el=auto	rd.lvm.	v=V$.lv=VolGroup00/LogVol00 rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[K[8G	Group00	L[Z	$console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 elevator=noop crashkernel=auto rd.lvm.lv=Vo$[24;108H[Z.	v=V$.lv=VolGroup00/LogVol00 rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[K[8G	Gr	$console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 elevator=noop crashkernel=auto rd.lvm.lv=Vo$[24;108HV$.lv=VolGroup00/LogVol00 rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[K[8G$console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 elevator=noop crashkernel=auto rd.lvm.lv=Vo$[24;108H[Z[Zrd.lvm.	v=V$.lv=VolGroup00/LogVol00 rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[K[8G	Group00	LogVol0	 rd.lvm	[Z[Z	$console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 elevator=noop crashkernel=auto rd.lvm.lv=Vo$[24;108HollGGrroouupp000//LLooggVVooll000  rv $.lv=vg rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[K[8G_ rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[24;9Hr rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[24;10Ho rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[24;11Hoo rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[24;12Ht rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[24;13H/ rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[24;14Hl rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[24;15Hv rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[24;16H_ rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[24;17Hr rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[24;18Ho rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[24;19Hoo rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[24;20Ht rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[24;21H rd	lvm.lv=	olGroup	0/LogVo	01 rhgb	quiet [8G[1K	linux16 /vmlinuz-3.10.0-862.2.3.el7.x86_64 root=/dev/mapper/vg_root-lv_root ro no_timer_check consol$[25;1H[25;9Hinitrd1	 /init[45d(B[0;7mSearch [rd.]:                                                                                                [46;20HY(B[m First Line[38G(B[0;7mT(B[m Go To Line[56G(B[0;7mW(B[m Beg of Par     (B[0;7mM-J(B[m FullJstify    (B[0;7mM-B(B[m Backwards[47;2H(B[0;7mC(B[m Cancel[47;20H(B[0;7mV(B[m Last Line[38G(B[0;7mR(B[m Replace [47;56H(B[0;7mO(B[m End of Par     (B[0;7mM-C(B[m Case Sens     (B[0;7mM-R(B[m Regexp[K[45;15H(B[0;7mrd.(B[m[24d$console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 elevator=noop crashkernel=auto rd.lvm.lv=vg[45;45H[1K (B[0;7m[ Search Wrapped ](B[m[K[46;20H(B[0;7mO(B[m WriteOut  [38G(B[0;7mR(B[m Read File [56G(B[0;7mY(B[m Prev Page      (B[0;7m^K(B[m Cut Text       (B[0;7m^C(B[m Cur Pos[K[47;2H(B[0;7mX(B[m Exit  [47;20H(B[0;7mJ(B[m Justify  [38G(B[0;7mW(B[m Where Is[47;56H(B[0;7mV(B[m Next Page      (B[0;7m^U(B[m UnCut Text     (B[0;7m^T(B[m To Spell[24;97Hrd.lvm.	v=v$.lv=vg_root/lv_root rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[K[8G	root/lv	ro[8G[1K	linux16 /vmlinuz-3.10.0-862.2.3.el7.x86_64 root=/dev/mapper/vg_root-lv_root ro no_timer_check consol$[25;58H[26d}[45;40H(B[0;7m[ XOFF ignored, mumble mumble ][26;2H(B[m[45d(B[0;7mSearch [rd.]:                                                                                                [46;20HY(B[m First Line[38G(B[0;7mT(B[m Go To Line[56G(B[0;7mW(B[m Beg of Par     (B[0;7mM-J(B[m FullJstify    (B[0;7mM-B(B[m Backwards[47;2H(B[0;7mC(B[m Cancel[47;20H(B[0;7mV(B[m Last Line[38G(B[0;7mR(B[m Replace [47;56H(B[0;7mO(B[m End of Par     (B[0;7mM-C(B[m Case Sens     (B[0;7mM-R(B[m Regexp[K[45;15H(B[0;7mrd.(B[m[24d$console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 elevator=noop crashkernel=auto rd.lvm.lv=vg[45;45H[1K (B[0;7m[ Search Wrapped ](B[m[K[46;20H(B[0;7mO(B[m WriteOut  [38G(B[0;7mR(B[m Read File [56G(B[0;7mY(B[m Prev Page      (B[0;7m^K(B[m Cut Text       (B[0;7m^C(B[m Cur Pos[K[47;2H(B[0;7mX(B[m Exit  [47;20H(B[0;7mJ(B[m Justify  [38G(B[0;7mW(B[m Where Is[47;56H(B[0;7mV(B[m Next Page      (B[0;7m^U(B[m UnCut Text     (B[0;7m^T(B[m To Spell[24;97Hrd.lvm.	v=v$.lv=vg_root/lv_root rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet[K[8G	root/lv	root[45d[K[24;22Hrd	lvm.lv=	olGroup	0/LogVo	01 rhgb	quiet [8G[1K	linux16 /vmlinuz-3.10.0-862.2.3.el7.x86_64 root=/dev/mapper/vg_root-lv_root ro no_timer_check consol$[25;1H[25;9Hinitrd1	 /i[26d}[27;20H[28d[29d[45d(B[0;7mFile Name to Write: /boot/grub2/grub.cfg                                                                     [46;19H(B[m         (B[0;7mM-D(B[m DOS Format       [55G(B[0;7mM-A(B[m Append  	         (B[0;7mM-B(B[m Backup File[K[47;2H(B[0;7mC(B[m Cancel[47;19H         (B[0;7mM-M(B[m Mac Format      [55G(B[0;7mM-P(B[m Prepend[K[45;41H[1;100H[39;49m(B[0;7m        [45;45H(B[m[1K (B[0;7m[ Wrote 127 lines ](B[m[K[46;19H(B[0;7m^O(B[m WriteOut       (B[0;7m^R(B[m Read File[55G(B[0;7m^Y(B[m Prev Page	(B[0;7m^K(B[m Cut Text       (B[0;7m^C(B[m Cur Pos[47;2H(B[0;7mX(B[m Exit  [47;19H(B[0;7m^J(B[m Justify        (B[0;7m^W(B[m Where Is[55G(B[0;7m^V(B[m Next Page	(B[0;7m^U(B[m UnCut Text     (B[0;7m^T(B[m To Spell[29d[46d[J[47;109H[47;1H[?1049l[?1l>]0;root@lvm:/boot[root@lvm boot]# reboot
+Running in chroot, ignoring request.
+]0;root@lvm:/boot[root@lvm boot]# exit
+exit
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# re[K[Ksudo reboot
+Connection to 127.0.0.1 closed by remote host.
+Connection to 127.0.0.1 closed.
+]0;root@MSK-IT: /home/ayudin/stands-03-lvm-masterroot@MSK-IT:/home/ayudin/stands-03-lvm-master# mc
+[?1049h[22;0;0t[1;47r[4l[47;1H(B[m[37m[40m(B[m[39;49m[K[?1049l[23;0;0t[?1001s[?1002h[?1006h[?2004h[?1049h[22;0;0t[1;47r[4l[?1h=(B[m[39m[49m[1;47r[H[2J[2;108H[1K [37m[44m┐[2;109H]0;mc [root@MSK-IT]:/home/ayudin/stands-03-lvm-master>[45;1H[39m[49mHint: Want your plain shell? Press C-o, and get back to MC with C-o again.[45;109H]0;mc [root@MSK-IT]:/home/ayudin/stands-03-lvm-master>[1;1H[30m[46m  Left     File     Command     Options     Right[K
+[37m[44m┌<─[30m[47m /home/ayudin/stands-03-lvm-master [37m[44m──────────.[^]>┐┌<─ /home/ayudin/stands-03-lvm-master ───────────.[^]>
+│[93m.n            Name             [37m│[93m Size  [37m│[93mModify time [37m││[93m.n            Name              [37m│[93m Size  [37m│[93mModify time [37m│[4;1H│[30m[46m/..                            │UP--DIR│фев 24 12:49[37m[44m││[97m/..                             [37m│[97mUP--DIR[37m│[97mфев 24 12:49[37m│[5;1H│[97m/.vagrant                      [37m│[97m   4096[37m│[97mфев 24 12:51[37m││[97m/.vagrant                       [37m│[97m   4096[37m│[97mфев 24 12:51[37m│[6;1H│ README.md                     │    109│фев  7  2019││ README.md                      │    109│фев  7  2019│[7;1H│ Vagrantfile                   │   2417│фев  7  2019││ Vagrantfile                    │   2417│фев  7  2019│[8;1H│ lvm.log                       │ 790528│фев 24 14:53││ lvm.log                        │ 790528│фев 24 14:53│[9;1H│ lvm2.log                      │  20480│фев 24 14:55││ lvm2.log                       │  20480│фев 24 14:55│[10;1H│                               │       │            ││                                │       │            │[11;1H│                               │       │            ││                                │       │            │[12;1H│                               │       │            ││                                │       │            │[13;1H│                               │       │            ││                                │       │            │[14;1H│                               │       │            ││                                │       │            │[15;1H│                               │       │            ││                                │       │            │[16;1H│                               │       │            ││                                │       │            │[17;1H│                               │       │            ││                                │       │            │[18;1H│                               │       │            ││                                │       │            │[19;1H│                               │       │            ││                                │       │            │[20;1H│                               │       │            ││                                │       │            │[21;1H│                               │       │            ││                                │       │            │[22;1H│                               │       │            ││                                │       │            │[23;1H│                               │       │            ││                                │       │            │[24;1H│                               │       │            ││                                │       │            │[25;1H│                               │       │            ││                                │       │            │[26;1H│                               │       │            ││                                │       │            │[27;1H│                               │       │            ││                                │       │            │[28;1H│                               │       │            ││                                │       │            │[29;1H│                               │       │            ││                                │       │            │[30;1H│                               │       │            ││                                │       │            │[31;1H│                               │       │            ││                                │       │            │[32;1H│                               │       │            ││                                │       │            │[33;1H│                               │       │            ││                                │       │            │[34;1H│                               │       │            ││                                │       │            │[35;1H│                               │       │            ││                                │       │            │[36;1H│                               │       │            ││                                │       │            │[37;1H│                               │       │            ││                                │       │            │[38;1H│                               │       │            ││                                │       │            │[39;1H│                               │       │            ││                                │       │            │[40;1H│                               │       │            ││                                │       │            │[41;1H│                               │       │            ││                                │       │            │[42;1H├────────────────────────────────────────────────────┤├─────────────────────────────────────────────────────┤[43;1H│UP--DIR                                             ││UP--DIR                                              │[44;1H└──────────────────────────────────── 24G/51G (46%) ─┘└───────────────────────────────────── 24G/51G (46%) ─┘[46;1H[39m[49mroot@MSK-IT:~#[92C[37m[44m[^][47;1H[97m[40m 1[30m[46mHelp    [97m[40m 2[30m[46mMenu     [97m[40m 3[30m[46mView     [97m[40m 4[30m[46mEdit     [97m[40m 5[30m[46mCopy     [97m[40m 6[30m[46mRenMov   [97m[40m 7[30m[46mMkdir    [97m[40m 8[30m[46mDelete   [97m[40m 9[30m[46mPullDn   [97m[40m10[30m[46mQuit[K[46;16H[46;13H[39m[49m/home/ayudin/stands-03-lvm-master#[60C[46;48H[1;1H[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K
+[K[1;109H[?2004l[?1006l[?1002l[?1001r[?1l>[47;1H(B[m[39;49m[K[?1049l[23;0;0t[39;49m
+]0;root@MSK-IT: /home/ayudin/stands-03-lvm-masterroot@MSK-IT:/home/ayudin/stands-03-lvm-master# mcvagrant ssh[1Pgit commitremote show aleksandr-yudin[6Ppush aleksandr-ayudinremote show aleksandr-yudin[K[5Pcommitvagrant sshmc[K[Kmcvagrant ssh[1Pgit commitremote show[5Pcommitvagrant sshmc[K[KscriScript started on 2020-02-24 14:56:28+0300
+]0;root@MSK-IT: /home/ayudin/stands-03-lvm-masterroot@MSK-IT:/home/ayudin/stands-03-lvm-master# vagrant ssh
+Last login: Mon Feb 24 11:43:01 2020 from 10.0.2.2
+]0;vagrant@lvm:~[?1034h[vagrant@lvm ~]$ lsblk
+NAME                    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                       8:0    0   40G  0 disk 
+├─sda1                    8:1    0    1M  0 part 
+├─sda2                    8:2    0    1G  0 part /boot
+└─sda3                    8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol01 253:1    0  1.5G  0 lvm  [SWAP]
+  └─VolGroup00-LogVol00 253:2    0 37.5G  0 lvm  
+sdb                       8:16   0   10G  0 disk 
+└─vg_root-lv_root       253:0    0   10G  0 lvm  /
+sdc                       8:32   0    2G  0 disk 
+sdd                       8:48   0    1G  0 disk 
+sde                       8:64   0    1G  0 disk 
+]0;vagrant@lvm:~[vagrant@lvm ~]$ lvremove /dev/VolGroi[Kup00/LogVol00
+  WARNING: Running as a non-root user. Functionality may be unavailable.
+  /run/lvm/lvmetad.socket: access failed: Permission denied
+  WARNING: Failed to connect to lvmetad. Falling back to device scanning.
+  /dev/mapper/control: open failed: Permission denied
+  Failure to communicate with kernel device-mapper driver.
+  Incompatible libdevmapper 1.02.146-RHEL7 (2018-01-22) and kernel driver (unknown version).
+  /run/lock/lvm/V_VolGroup00:aux: open failed: Permission denied
+  Can't get lock for VolGroup00
+  Cannot process volume group VolGroup00
+]0;vagrant@lvm:~[vagrant@lvm ~]$ lvremove /dev/VolGroup00/LogVol00[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ksudo su
+]0;root@lvm:/home/vagrant[?1034h[root@lvm vagrant]# lvremove /dev/VolGroup00/LogVol00
+Do you really want to remove active logical volume VolGroup00/LogVol00? [y/n]: y
+  Logical volume "LogVol00" successfully removed
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lvcreate -n VolGroup00/LogVol00 -L 8G /dev/VolGroup00
+WARNING: xfs signature detected on /dev/VolGroup00/LogVol00 at offset 0. Wipe it? [y/n]: y
+  Wiping xfs signature on /dev/VolGroup00/LogVol00.
+  Logical volume "LogVol00" created.
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mkfs.xfs /dev/VolGroup00/LogVol00
+meta-data=/dev/VolGroup00/LogVol00 isize=512    agcount=4, agsize=524288 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0, sparse=0
+data     =                       bsize=4096   blocks=2097152, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=2560, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mount /dev/VolGroup00/LogVol00 /mnt
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# ls /mnr[Kt
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# xfsdump -J - /dev/vg_root/lv_root | xfsrestore -J - /mnt
+xfsrestore: using file dump (drive_simple) strategy
+xfsrestore: version 3.1.7 (dump format 3.0)
+xfsdump: using file dump (drive_simple) strategy
+xfsdump: version 3.1.7 (dump format 3.0)
+xfsdump: level 0 dump of lvm:/
+xfsdump: dump date: Mon Feb 24 12:01:34 2020
+xfsdump: session id: 2f40a679-a99d-45fd-b8d2-90f0b43578ac
+xfsdump: session label: ""
+xfsrestore: searching media for dump
+xfsdump: ino map phase 1: constructing initial dump list
+xfsdump: ino map phase 2: skipping (no pruning necessary)
+xfsdump: ino map phase 3: skipping (only one dump stream)
+xfsdump: ino map construction complete
+xfsdump: estimated dump size: 813036288 bytes
+xfsdump: creating dump session media file 0 (media 0, file 0)
+xfsdump: dumping ino map
+xfsdump: dumping directories
+xfsrestore: examining media file 0
+xfsrestore: dump description: 
+xfsrestore: hostname: lvm
+xfsrestore: mount point: /
+xfsrestore: volume: /dev/mapper/vg_root-lv_pt -a lb[Kvm2.log 
+Script started, file is lvm2.log
+]0;root@MSK-IT: /home/ayudin/stands-03-lvm-masterroot@MSK-IT:/home/ayudin/stands-03-lvm-master# vagrant ssh
+Last login: Mon Feb 24 11:43:01 2020 from 10.0.2.2
+]0;vagrant@lvm:~[?1034h[vagrant@lvm ~]$ lsblk
+NAME                    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                       8:0    0   40G  0 disk 
+├─sda1                    8:1    0    1M  0 part 
+├─sda2                    8:2    0    1G  0 part /boot
+└─sda3                    8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol01 253:1    0  1.5G  0 lvm  [SWAP]
+  └─VolGroup00-LogVol00 253:2    0 37.5G  0 lvm  
+sdb                       8:16   0   10G  0 disk 
+└─vg_root-lv_root       253:0    0   10G  0 lvm  /
+sdc                       8:32   0    2G  0 disk 
+sdd                       8:48   0    1G  0 disk 
+sde                       8:64   0    1G  0 disk 
+]0;vagrant@lvm:~[vagrant@lvm ~]$ lvremove /dev/VolGroi[Kup00/LogVol00
+  WARNING: Running as a non-root user. Functionality may be unavailable.
+  /run/lvm/lvmetad.socket: access failed: Permission denied
+  WARNING: Failed to connect to lvmetad. Falling back to device scanning.
+  /dev/mapper/control: open failed: Permission denied
+  Failure to communicate with kernel device-mapper driver.
+  Incompatible libdevmapper 1.02.146-RHEL7 (2018-01-22) and kernel driver (unknown version).
+  /run/lock/lvm/V_VolGroup00:aux: open failed: Permission denied
+  Can't get lock for VolGroup00
+  Cannot process volume group VolGroup00
+]0;vagrant@lvm:~[vagrant@lvm ~]$ lvremove /dev/VolGroup00/LogVol00[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ksudo su
+]0;root@lvm:/home/vagrant[?1034h[root@lvm vagrant]# lvremove /dev/VolGroup00/LogVol00
+Do you really want to remove active logical volume VolGroup00/LogVol00? [y/n]: y
+  Logical volume "LogVol00" successfully removed
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lvcreate -n VolGroup00/LogVol00 -L 8G /dev/VolGroup00
+WARNING: xfs signature detected on /dev/VolGroup00/LogVol00 at offset 0. Wipe it? [y/n]: y
+  Wiping xfs signature on /dev/VolGroup00/LogVol00.
+  Logical volume "LogVol00" created.
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mkfs.xfs /dev/VolGroup00/LogVol00
+meta-data=/dev/VolGroup00/LogVol00 isize=512    agcount=4, agsize=524288 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0, sparse=0
+data     =                       bsize=4096   blocks=2097152, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=2560, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mount /dev/VolGroup00/LogVol00 /mnt
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# ls /mnr[Kt
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# xfsdump -J - /dev/vg_root/lv_root | xfsrestore -J - /mnt
+xfsrestore: using file dump (drive_simple) strategy
+xfsrestore: version 3.1.7 (dump format 3.0)
+xfsdump: using file dump (drive_simple) strategy
+xfsdump: version 3.1.7 (dump format 3.0)
+xfsdump: level 0 dump of lvm:/
+xfsdump: dump date: Mon Feb 24 12:01:34 2020
+xfsdump: session id: 2f40a679-a99d-45fd-b8d2-90f0b43578ac
+xfsdump: session label: ""
+xfsrestore: searching media for dump
+xfsdump: ino map phase 1: constructing initial dump list
+xfsdump: ino map phase 2: skipping (no pruning necessary)
+xfsdump: ino map phase 3: skipping (only one dump stream)
+xfsdump: ino map construction complete
+xfsdump: estimated dump size: 813036288 bytes
+xfsdump: creating dump session media file 0 (media 0, file 0)
+xfsdump: dumping ino map
+xfsdump: dumping directories
+xfsrestore: examining media file 0
+xfsrestore: dump description: 
+xfsrestore: hostname: lvm
+xfsrestore: mount point: /
+xfsrestore: volume: /dev/mroot
+xfsrestore: session time: Mon Feb 24 12:01:34 2020
+xfsrestore: level: 0
+xfsrestore: session label: ""
+xfsrestore: media label: ""
+xfsrestore: file system id: 65cb5728-eea1-4f02-8222-a7922a0f4b19
+xfsrestore: session id: 2f40a679-a99d-45fd-b8d2-90f0b43578ac
+xfsrestore: media id: eef1cc3d-235c-4090-b423-8f4a6c79515f
+xfsrestore: searching media for directory dump
+xfsrestore: reading directories
+xfsdump: dumping non-directory files
+xfsrestore: 3174 directories and 27077 entries processed
+xfsrestore: directory post-processing
+xfsrestore: restoring non-directory files
+xfsdump: ending media file
+xfsdump: media file size 785140696 bytes
+xfsdump: dump size (non-dir files) : 769872592 bytes
+xfsdump: dump complete: 11 seconds elapsed
+xfsdump: Dump Status: SUCCESS
+xfsrestore: restore complete: 11 seconds elapsed
+xfsrestore: Restore Status: SUCCESS
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# for i in /proc/ /sys/ /dev/ /run/ /boot/; do mount --bind $i /mnt/$i; done
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# chroot /mnt/
+]0;root@lvm:/[?1034h[root@lvm /]# grub2-mkconfig -o /boot/grub2/grub.cfg
+Generating grub configuration file ...
+Found linux image: /boot/vmlinuz-3.10.0-862.2.3.el7.x86_64
+Found initrd image: /boot/initramfs-3.10.0-862.2.3.el7.x86_64.img
+done
+]0;root@lvm:/[root@lvm /]# cd /boot ; for i in `ls initramfs-*img`; do dracut -v $i `echo $i|sed "s/initramfs-//g; s/.img/ /g"` --force; done
+Executing: /sbin/dracut -v initramfs-3.10.0-862.2.3.el7.x86_64.img 3.10.0-862.2.3.el7.x86_64 --force
+dracut module 'busybox' will not be installed, because command 'busybox' could not be found!
+dracut module 'crypt' will not be installed, because command 'cryptsetup' could not be found!
+dracut module 'dmraid' will not be installed, because command 'dmraid' could not be found!
+dracut module 'dmsquash-live-ntfs' will not be installed, because command 'ntfs-3g' could not be found!
+dracut module 'multipath' will not be installed, because command 'multipath' could not be found!
+dracut module 'busybox' will not be installed, because command 'busybox' could not be found!
+dracut module 'crypt' will not be installed, because command 'cryptsetup' could not be found!
+dracut module 'dmraid' will not be installed, because command 'dmraid' could not be found!
+dracut module 'dmsquash-live-ntfs' will not be installed, because command 'ntfs-3g' could not be found!
+dracut module 'multipath' will not be installed, because command 'multipath' could not be found!
+*** Including module: bash ***
+*** Including module: nss-softokn ***
+*** Including module: i18n ***
+*** Including module: drm ***
+*** Including module: plymouth ***
+*** Including module: dm ***
+Skipping udev rule: 64-device-mapper.rules
+Skipping udev rule: 60-persistent-storage-dm.rules
+Skipping udev rule: 55-dm.rules
+*** Including module: kernel-modules ***
+Omitting driver floppy
+*** Including module: lvm ***
+Skipping udev rule: 64-device-mapper.rules
+Skipping udev rule: 56-lvm.rules
+Skipping udev rule: 60-persistent-storage-lvm.rules
+*** Including module: qemu ***
+*** Including module: resume ***
+*** Including module: rootfs-block ***
+*** Including module: terminfo ***
+*** Including module: udev-rules ***
+Skipping udev rule: 40-redhat-cpu-hotplug.rules
+Skipping udev rule: 91-permissions.rules
+*** Including module: biosdevname ***
+*** Including module: systemd ***
+*** Including module: usrmount ***
+*** Including module: base ***
+*** Including module: fs-lib ***
+*** Including module: shutdown ***
+*** Including modules done ***
+*** Installing kernel module dependencies and firmware ***
+*** Installing kernel module dependencies and firmware done ***
+*** Resolving executable dependencies ***
+*** Resolving executable dependencies done***
+*** Hardlinking files ***
+*** Hardlinking files done ***
+*** Stripping files ***
+*** Stripping files done ***
+*** Generating early-microcode cpio image contents ***
+*** No early-microcode cpio image needed ***
+*** Store current command line parameters ***
+*** Creating image fileapper/vg_root-lv_root
+xfsrestore: session time: Mon Feb 24 12:01:34 2020
+xfsrestore: level: 0
+xfsrestore: session label: ""
+xfsrestore: media label: ""
+xfsrestore: file system id: 65cb5728-eea1-4f02-8222-a7922a0f4b19
+xfsrestore: session id: 2f40a679-a99d-45fd-b8d2-90f0b43578ac
+xfsrestore: media id: eef1cc3d-235c-4090-b423-8f4a6c79515f
+xfsrestore: searching media for directory dump
+xfsrestore: reading directories
+xfsdump: dumping non-directory files
+xfsrestore: 3174 directories and 27077 entries processed
+xfsrestore: directory post-processing
+xfsrestore: restoring non-directory files
+xfsdump: ending media file
+xfsdump: media file size 785140696 bytes
+xfsdump: dump size (non-dir files) : 769872592 bytes
+xfsdump: dump complete: 11 seconds elapsed
+xfsdump: Dump Status: SUCCESS
+xfsrestore: restore complete: 11 seconds elapsed
+xfsrestore: Restore Status: SUCCESS
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# for i in /proc/ /sys/ /dev/ /run/ /boot/; do mount --bind $i /mnt/$i; done
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# chroot /mnt/
+]0;root@lvm:/[?1034h[root@lvm /]# grub2-mkconfig -o /boot/grub2/grub.cfg
+Generating grub configuration file ...
+Found linux image: /boot/vmlinuz-3.10.0-862.2.3.el7.x86_64
+Found initrd image: /boot/initramfs-3.10.0-862.2.3.el7.x86_64.img
+done
+]0;root@lvm:/[root@lvm /]# cd /boot ; for i in `ls initramfs-*img`; do dracut -v $i `echo $i|sed "s/initramfs-//g; s/.img/ /g"` --force; done
+Executing: /sbin/dracut -v initramfs-3.10.0-862.2.3.el7.x86_64.img 3.10.0-862.2.3.el7.x86_64 --force
+dracut module 'busybox' will not be installed, because command 'busybox' could not be found!
+dracut module 'crypt' will not be installed, because command 'cryptsetup' could not be found!
+dracut module 'dmraid' will not be installed, because command 'dmraid' could not be found!
+dracut module 'dmsquash-live-ntfs' will not be installed, because command 'ntfs-3g' could not be found!
+dracut module 'multipath' will not be installed, because command 'multipath' could not be found!
+dracut module 'busybox' will not be installed, because command 'busybox' could not be found!
+dracut module 'crypt' will not be installed, because command 'cryptsetup' could not be found!
+dracut module 'dmraid' will not be installed, because command 'dmraid' could not be found!
+dracut module 'dmsquash-live-ntfs' will not be installed, because command 'ntfs-3g' could not be found!
+dracut module 'multipath' will not be installed, because command 'multipath' could not be found!
+*** Including module: bash ***
+*** Including module: nss-softokn ***
+*** Including module: i18n ***
+*** Including module: drm ***
+*** Including module: plymouth ***
+*** Including module: dm ***
+Skipping udev rule: 64-device-mapper.rules
+Skipping udev rule: 60-persistent-storage-dm.rules
+Skipping udev rule: 55-dm.rules
+*** Including module: kernel-modules ***
+Omitting driver floppy
+*** Including module: lvm ***
+Skipping udev rule: 64-device-mapper.rules
+Skipping udev rule: 56-lvm.rules
+Skipping udev rule: 60-persistent-storage-lvm.rules
+*** Including module: qemu ***
+*** Including module: resume ***
+*** Including module: rootfs-block ***
+*** Including module: terminfo ***
+*** Including module: udev-rules ***
+Skipping udev rule: 40-redhat-cpu-hotplug.rules
+Skipping udev rule: 91-permissions.rules
+*** Including module: biosdevname ***
+*** Including module: systemd ***
+*** Including module: usrmount ***
+*** Including module: base ***
+*** Including module: fs-lib ***
+*** Including module: shutdown ***
+*** Including modules done ***
+*** Installing kernel module dependencies and firmware ***
+*** Installing kernel module dependencies and firmware done ***
+*** Resolving executable dependencies ***
+*** Resolving executable dependencies done***
+*** Hardlinking files ***
+*** Hardlinking files done ***
+*** Stripping files ***
+*** Stripping files done ***
+*** Generating early-microcode cpio image contents ***
+*** No early-microcode cpio image needed ***
+*** Store current command line parameters ***
+*** Cr ***
+*** Creating image file done ***
+*** Creating initramfs image file '/boot/initramfs-3.10.0-862.2.3.el7.x86_64.img' done ***
+]0;root@lvm:/boot[root@lvm boot]# lsblk
+NAME                    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                       8:0    0   40G  0 disk 
+├─sda1                    8:1    0    1M  0 part 
+├─sda2                    8:2    0    1G  0 part /boot
+└─sda3                    8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol01 253:1    0  1.5G  0 lvm  [SWAP]
+  └─VolGroup00-LogVol00 253:2    0    8G  0 lvm  /
+sdb                       8:16   0   10G  0 disk 
+└─vg_root-lv_root       253:0    0   10G  0 lvm  
+sdc                       8:32   0    2G  0 disk 
+sdd                       8:48   0    1G  0 disk 
+sde                       8:64   0    1G  0 disk 
+]0;root@lvm:/boot[root@lvm boot]# pvcreate /dev/sdc ;[K/dev/sdd
+  Physical volume "/dev/sdc" successfully created.
+  Physical volume "/dev/sdd" successfully created.
+]0;root@lvm:/boot[root@lvm boot]# vgcreate /vg[K[K[Kvg_var /dev/sdd[Kc /dev/sdd
+  Volume group "vg_var" successfully created
+]0;root@lvm:/boot[root@lvm boot]# lvcreate -L 950N[KM -m1 -n lv_var vg_var
+  Rounding up size to full physical extent 952.00 MiB
+  Logical volume "lv_var" created.
+]0;root@lvm:/boot[root@lvm boot]# mkfs
+mkfs         mkfs.btrfs   mkfs.cramfs  mkfs.ext2    mkfs.ext3    mkfs.ext4    mkfs.minix   mkfs.xfs
+[root@lvm boot]# mkfs
+mkfs         mkfs.btrfs   mkfs.cramfs  mkfs.ext2    mkfs.ext3    mkfs.ext4    mkfs.minix   mkfs.xfs
+[root@lvm boot]# mkfs.ext4 /ve[K[Kdev/vg_var/lv_var 
+mke2fs 1.42.9 (28-Dec-2013)
+Filesystem label=
+OS type: Linux
+Block size=4096 (log=2)
+Fragment size=4096 (log=2)
+Stride=0 blocks, Stripe width=0 blocks
+60928 inodes, 243712 blocks
+12185 blocks (5.00%) reserved for the super user
+First data block=0
+Maximum filesystem blocks=249561088
+8 block groups
+32768 blocks per group, 32768 fragments per group
+7616 inodes per group
+Superblock backups stored on blocks: 
+	32768, 98304, 163840, 229376
+
+Allocating group tables: 0/8   done                            
+Writing inode tables: 0/8   done                            
+Creating journal (4096 blocks): done
+Writing superblocks and filesystem accounting information: 0/8   done
+
+]0;root@lvm:/boot[root@lvm boot]# mount /dev/vg_var/lv)[K_var /mnt
+]0;root@lvm:/boot[root@lvm boot]# cp -aR /var/* /mnt/ 
+]0;root@lvm:/boot[root@lvm boot]# mkdir /tmp/oldvar && mv /var/* /tmp/oldvar
+]0;root@lvm:/boot[root@lvm boot]# mc
+[?1049h[1;47r[4l[47;1H(B[m[37m[40m(B[m[39;49m[K[?1049l[?1001s[?1002h[?1015h7[?47hCannot open master side of pty: No such file or directory (2)
+]0;mc [root@lvm]:/boot>]0;mc [root@lvm]:/boot>[?1049h[1;47r[4l[?1h=(B[m[39m[49m[1;47r[H[2J[2;1H[37m[44m┌<─[30m[47m /boot [37m[44m──────────────────────────────────────.[^]>┐
+│[52C│
+│[30m[46m/..                            │UP--DIR│Feb 24 12:01[37m[44m│
+│[97m/efi                           [37m│[97m     17[37m│[97mMay 12  2018[37m│
+│[97m/grub                          [37m│[97m     27[37m│[97mMay 12  2018[37m│
+│[97m/grub2                         [37m│[97m     97[37m│[97mFeb 24 12:02[37m│
+│ .vmlinuz-3.10.0~l7.x86_64.hmac│    170│May  9  2018│
+│ System.map-3.10~2.3.el7.x86_64│3409102│May  9  2018│
+│ config-3.10.0-8~2.3.el7.x86_64│ 147823│May  9  2018│
+│ initramfs-3.10.~el7.x86_64.img│ 14257K│Feb 24 12:03│
+│[95m symvers-3.10.0-~.el7.x86_64.gz[37m│[95m 304926[37m│[95mMay  9  2018[37m│
+│[92m*vmlinuz-3.10.0-~2.3.el7.x86_64[37m│[92m6225056[37m│[92mMay  9  2018[37m│
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                   eating image file ***
+*** Creating image file done ***
+*** Creating initramfs image file '/boot/initramfs-3.10.0-862.2.3.el7.x86_64.img' done ***
+]0;root@lvm:/boot[root@lvm boot]# lsblk
+NAME                    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                       8:0    0   40G  0 disk 
+├─sda1                    8:1    0    1M  0 part 
+├─sda2                    8:2    0    1G  0 part /boot
+└─sda3                    8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol01 253:1    0  1.5G  0 lvm  [SWAP]
+  └─VolGroup00-LogVol00 253:2    0    8G  0 lvm  /
+sdb                       8:16   0   10G  0 disk 
+└─vg_root-lv_root       253:0    0   10G  0 lvm  
+sdc                       8:32   0    2G  0 disk 
+sdd                       8:48   0    1G  0 disk 
+sde                       8:64   0    1G  0 disk 
+]0;root@lvm:/boot[root@lvm boot]# pvcreate /dev/sdc ;[K/dev/sdd
+  Physical volume "/dev/sdc" successfully created.
+  Physical volume "/dev/sdd" successfully created.
+]0;root@lvm:/boot[root@lvm boot]# vgcreate /vg[K[K[Kvg_var /dev/sdd[Kc /dev/sdd
+  Volume group "vg_var" successfully created
+]0;root@lvm:/boot[root@lvm boot]# lvcreate -L 950N[KM -m1 -n lv_var vg_var
+  Rounding up size to full physical extent 952.00 MiB
+  Logical volume "lv_var" created.
+]0;root@lvm:/boot[root@lvm boot]# mkfs
+mkfs         mkfs.btrfs   mkfs.cramfs  mkfs.ext2    mkfs.ext3    mkfs.ext4    mkfs.minix   mkfs.xfs
+[root@lvm boot]# mkfs
+mkfs         mkfs.btrfs   mkfs.cramfs  mkfs.ext2    mkfs.ext3    mkfs.ext4    mkfs.minix   mkfs.xfs
+[root@lvm boot]# mkfs.ext4 /ve[K[Kdev/vg_var/lv_var 
+mke2fs 1.42.9 (28-Dec-2013)
+Filesystem label=
+OS type: Linux
+Block size=4096 (log=2)
+Fragment size=4096 (log=2)
+Stride=0 blocks, Stripe width=0 blocks
+60928 inodes, 243712 blocks
+12185 blocks (5.00%) reserved for the super user
+First data block=0
+Maximum filesystem blocks=249561088
+8 block groups
+32768 blocks per group, 32768 fragments per group
+7616 inodes per group
+Superblock backups stored on blocks: 
+	32768, 98304, 163840, 229376
+
+Allocating group tables: 0/8   done                            
+Writing inode tables: 0/8   done                            
+Creating journal (4096 blocks): done
+Writing superblocks and filesystem accounting information: 0/8   done
+
+]0;root@lvm:/boot[root@lvm boot]# mount /dev/vg_var/lv)[K_var /mnt
+]0;root@lvm:/boot[root@lvm boot]# cp -aR /var/* /mnt/ 
+]0;root@lvm:/boot[root@lvm boot]# mkdir /tmp/oldvar && mv /var/* /tmp/oldvar
+]0;root@lvm:/boot[root@lvm boot]# mc
+[?1049h[1;47r[4l[47;1H(B[m[37m[40m(B[m[39;49m[K[?1049l[?1001s[?1002h[?1015h7[?47hCannot open master side of pty: No such file or directory (2)
+]0;mc [root@lvm]:/boot>]0;mc [root@lvm]:/boot>[?1049h[1;47r[4l[?1h=(B[m[39m[49m[1;47r[H[2J[2;1H[37m[44m┌<─[30m[47m /boot [37m[44m──────────────────────────────────────.[^]>┐
+│[52C│
+│[30m[46m/..                            │UP--DIR│Feb 24 12:01[37m[44m│
+│[97m/efi                           [37m│[97m     17[37m│[97mMay 12  2018[37m│
+│[97m/grub                          [37m│[97m     27[37m│[97mMay 12  2018[37m│
+│[97m/grub2                         [37m│[97m     97[37m│[97mFeb 24 12:02[37m│
+│ .vmlinuz-3.10.0~l7.x86_64.hmac│    170│May  9  2018│
+│ System.map-3.10~2.3.el7.x86_64│3409102│May  9  2018│
+│ config-3.10.0-8~2.3.el7.x86_64│ 147823│May  9  2018│
+│ initramfs-3.10.~el7.x86_64.img│ 14257K│Feb 24 12:03│
+│[95m symvers-3.10.0-~.el7.x86_64.gz[37m│[95m 304926[37m│[95mMay  9  2018[37m│
+│[92m*vmlinuz-3.10.0-~2.3.el7.x86_64[37m│[92m6225056[37m│[92mMay  9  2018[37m│
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│              │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+├[52C┤
+│[52C│
+└───────────────────────────────── 953M/1014M (94%) ─┘
+[39m[49mHint: Are some of your keys not working? Look at Options/Learn keys.
+
+[97m[40m 1[30m[46mHelp    [97m[40m 2[30m[46mMenu     [97m[40m 3[30m[46mView     [97m[40m 4[30m[46mEdit     [97m[40m 5[30m[46mCopy     [97m[40m 6[30m[46mRenMov   [97m[40m 7[30m[46mMkdir    [97m[40m 8[30m[46mDelete   [97m[40m 9[30m[46mPullDn   [97m[40m10[30m[46mQuit[K[45;109H]0;mc [root@lvm]:/boot>]0;mc [root@lvm]:/boot>[1;1H  Left     File     Command     Options     Right[K[2;55H[37m[44m┌<─ /boot ───────────────────────────────────────.[^]>┐[3;2H[93m'n            Name             [37m│[93m Size  [37m│[93mModify time [37m││[93m'n            Name              [37m│[93m Size  [37m│[93mModify time [37m│[4;55H│[97m/..                             [37m│[97mUP--DIR[37m│[97mFeb 24 12:01[37m│[5;55H│[97m/efi                            [37m│[97m     17[37m│[97mMay 12  2018[37m│[6;55H│[97m/grub                           [37m│[97m     27[37m│[97mMay 12  2018[37m│[7;55H│[97m/grub2                          [37m│[97m     97[37m│[97mFeb 24 12:02[37m│[8;55H│ .vmlinuz-3.10.0~el7.x86_64.hmac│    170│May  9  2018│[9;55H│ System.map-3.10~.2.3.el7.x86_64│3409102│May  9  2018│[10;55H│ config-3.10.0-8~.2.3.el7.x86_64│ 147823│May  9  2018│[11;55H│ initramfs-3.10.~.el7.x86_64.img│ 14257K│Feb 24 12:03│[12;55H│[95m symvers-3.10.0-~3.el7.x86_64.gz[37m│[95m 304926[37m│[95mMay  9  2018[37m│[13;55H│[92m*vmlinuz-3.10.0-~.2.3.el7.x86_64[37m│[92m6225056[37m│[92mMay  9  2018[37m│[14;55H│                                │       │            │[15;55H│                                │       │            │[16;55H│                                │       │            │[17;55H│                                │       │            │[18;55H│                                │       │            │[19;55H│                                │       │            │[20;55H│                                │       │            │[21;55H│                                │       │            │[22;55H│                                │       │                                  │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+├[52C┤
+│[52C│
+└───────────────────────────────── 953M/1014M (94%) ─┘
+[39m[49mHint: Are some of your keys not working? Look at Options/Learn keys.
+
+[97m[40m 1[30m[46mHelp    [97m[40m 2[30m[46mMenu     [97m[40m 3[30m[46mView     [97m[40m 4[30m[46mEdit     [97m[40m 5[30m[46mCopy     [97m[40m 6[30m[46mRenMov   [97m[40m 7[30m[46mMkdir    [97m[40m 8[30m[46mDelete   [97m[40m 9[30m[46mPullDn   [97m[40m10[30m[46mQuit[K[45;109H]0;mc [root@lvm]:/boot>]0;mc [root@lvm]:/boot>[1;1H  Left     File     Command     Options     Right[K[2;55H[37m[44m┌<─ /boot ───────────────────────────────────────.[^]>┐[3;2H[93m'n            Name             [37m│[93m Size  [37m│[93mModify time [37m││[93m'n            Name              [37m│[93m Size  [37m│[93mModify time [37m│[4;55H│[97m/..                             [37m│[97mUP--DIR[37m│[97mFeb 24 12:01[37m│[5;55H│[97m/efi                            [37m│[97m     17[37m│[97mMay 12  2018[37m│[6;55H│[97m/grub                           [37m│[97m     27[37m│[97mMay 12  2018[37m│[7;55H│[97m/grub2                          [37m│[97m     97[37m│[97mFeb 24 12:02[37m│[8;55H│ .vmlinuz-3.10.0~el7.x86_64.hmac│    170│May  9  2018│[9;55H│ System.map-3.10~.2.3.el7.x86_64│3409102│May  9  2018│[10;55H│ config-3.10.0-8~.2.3.el7.x86_64│ 147823│May  9  2018│[11;55H│ initramfs-3.10.~.el7.x86_64.img│ 14257K│Feb 24 12:03│[12;55H│[95m symvers-3.10.0-~3.el7.x86_64.gz[37m│[95m 304926[37m│[95mMay  9  2018[37m│[13;55H│[92m*vmlinuz-3.10.0-~.2.3.el7.x86_64[37m│[92m6225056[37m│[92mMay  9  2018[37m│[14;55H│                                │       │            │[15;55H│                                │       │            │[16;55H│                                │       │            │[17;55H│                                │       │            │[18;55H│                                │       │            │[19;55H│                                │       │            │[20;55H│                                │       │            │[21;55H│                                │       │            │[22;55H│                                �       │[23;55H│                                │       │            │[24;55H│                                │       │            │[25;55H│                                │       │            │[26;55H│                                │       │            │[27;55H│                                │       │            │[28;55H│                                │       │            │[29;55H│                                │       │            │[30;55H│                                │       │            │[31;55H│                                │       │            │[32;55H│                                │       │            │[33;55H│                                │       │            │[34;55H│                                │       │            │[35;55H│                                │       │            │[36;55H│                                │       │            │[37;55H│                                │       │            │[38;55H│                                │       │            │[39;55H│                                │       │            │[40;55H│                                │       │            │[41;55H│                                │       │            │[42;2H────────────────────────────────────────────────────┤├─────────────────────────────────────────────────────┤[43;2HUP--DIR                                             ││UP--DIR                                              │[44;55H└────────────────────────────────── 953M/1014M (94%) ─┘[46;1H[39m[49m#[105C[37m[44m[^][46;3H]0;mc [root@lvm]:/>[2;6H[30m[47m [37m[44m────[4;2H[97m~bin                           [37m│[97m      7[37m│[97mFeb 24 12:01[5;2H[30m[46m/boot                          │   4096│Feb 24 12:03[6;3H[97m[44mdev [30C3280[37m│[97mFeb 24 12:05[7;3Hetc  [29C8192[9C1:55[8;2H/home                          [37m│[97m     21[37m│[97mMay 12  2018[9;2H~lib                           [37m│[97m      7[37m│[97mFeb 24 12:01[10;2H~lib64                         [37m│[97m      9[37m│[97mFeb 24 12:01[11;2H/media                         [37m│[97m      6[37m│[97mApr 11  2018[12;2H/mnt                           [37m│[97m   4096[37m│[97mFeb 24 12:07[13;2H/opt                           [37m│[97m      6[37m│[97mApr 11  2018[14;2H/proc                          [37m│[97m      0[37m│[97mFeb 24  2020[15;2H/root                          [37m│[97m    213[37m│[97mFeb 24 10:25[16;2H/run                           [37m│[97m    880[37m│[97mFeb 24 12:05[17;2H~sbin                          [37m│[97m      8[37m│[97mFeb 24 12:01[18;2H/srv                           [37m│[97m      6[37m│[97mApr 11  2018[19;2H/sys                           [37m│[97m      0[37m│[97mFeb 24 11:55[20;2H/tmp                           [37m│[97m   4096[37m│[97mFeb 24 12:08[21;2H/usr                           [37m│[97m    155[37m│[97mMay 12  2018[22;2H/vagrant                       [37m│[97m     42[37m│[97mFeb 24 09:50[23;2H/var                           [37m│[97m     22[37m│[97mFeb 24 12:08[43;2H[37m/boot  [44;34H 7369M/8182M (90[46;3H[5;2H[97m/boot                          [37m│[97m   4096[37m│[97mFeb 24 12:03[6;2H[30m[46m/dev                           │   3280│Feb 24 12:05[43;3H[37m[44mdev [46;3H[6;2H[97m/dev                           [37m│[97m   3280[37m│[97mFeb 24 12:05[7;2H[30m[46m/etc                           │   8192│Feb 24 11:55[43;3H[37m[44metc[46;3H[7;2H[97m/etc                           [37m│[9��       │            │[23;55H│                                │       │            │[24;55H│                                │       │            │[25;55H│                                │       │            │[26;55H│                                │       │            │[27;55H│                                │       │            │[28;55H│                                │       │            │[29;55H│                                │       │            │[30;55H│                                │       │            │[31;55H│                                │       │            │[32;55H│                                │       │            │[33;55H│                                │       │            │[34;55H│                                │       │            │[35;55H│                                │       │            │[36;55H│                                │       │            │[37;55H│                                │       │            │[38;55H│                                │       │            │[39;55H│                                │       │            │[40;55H│                                │       │            │[41;55H│                                │       │            │[42;2H────────────────────────────────────────────────────┤├─────────────────────────────────────────────────────┤[43;2HUP--DIR                                             ││UP--DIR                                              │[44;55H└────────────────────────────────── 953M/1014M (94%) ─┘[46;1H[39m[49m#[105C[37m[44m[^][46;3H]0;mc [root@lvm]:/>[2;6H[30m[47m [37m[44m────[4;2H[97m~bin                           [37m│[97m      7[37m│[97mFeb 24 12:01[5;2H[30m[46m/boot                          │   4096│Feb 24 12:03[6;3H[97m[44mdev [30C3280[37m│[97mFeb 24 12:05[7;3Hetc  [29C8192[9C1:55[8;2H/home                          [37m│[97m     21[37m│[97mMay 12  2018[9;2H~lib                           [37m│[97m      7[37m│[97mFeb 24 12:01[10;2H~lib64                         [37m│[97m      9[37m│[97mFeb 24 12:01[11;2H/media                         [37m│[97m      6[37m│[97mApr 11  2018[12;2H/mnt                           [37m│[97m   4096[37m│[97mFeb 24 12:07[13;2H/opt                           [37m│[97m      6[37m│[97mApr 11  2018[14;2H/proc                          [37m│[97m      0[37m│[97mFeb 24  2020[15;2H/root                          [37m│[97m    213[37m│[97mFeb 24 10:25[16;2H/run                           [37m│[97m    880[37m│[97mFeb 24 12:05[17;2H~sbin                          [37m│[97m      8[37m│[97mFeb 24 12:01[18;2H/srv                           [37m│[97m      6[37m│[97mApr 11  2018[19;2H/sys                           [37m│[97m      0[37m│[97mFeb 24 11:55[20;2H/tmp                           [37m│[97m   4096[37m│[97mFeb 24 12:08[21;2H/usr                           [37m│[97m    155[37m│[97mMay 12  2018[22;2H/vagrant                       [37m│[97m     42[37m│[97mFeb 24 09:50[23;2H/var                           [37m│[97m     22[37m│[97mFeb 24 12:08[43;2H[37m/boot  [44;34H 7369M/8182M (90[46;3H[5;2H[97m/boot                          [37m│[97m   4096[37m│[97mFeb 24 12:03[6;2H[30m[46m/dev                           │   3280│Feb 24 12:05[43;3H[37m[44mdev [46;3H[6;2H[97m/dev                           [37m│[97m   3280[37m│[97mFeb 24 12:05[7;2H[30m[46m/etc                           │   8192│Feb 24 11:55[43;3H[37m[44metc[46;3H[7;2H[97m/etc                     7m   8192[37m│[97mFeb 24 11:55[8;2H[30m[46m/home                          │     21│May 12  2018[43;3H[37m[44mhome[46;3H[8;2H[97m/home                          [37m│[97m     21[37m│[97mMay 12  2018[9;2H[30m[46m~lib                           │      7│Feb 24 12:01[43;2H[37m[44m-> usr/lib[46;3H[9;2H[97m~lib                           [37m│[97m      7[37m│[97mFeb 24 12:01[10;2H[30m[46m~lib64                         │      9│Feb 24 12:01[43;12H[37m[44m64[46;3H[10;2H[97m~lib64                         [37m│[97m      9[37m│[97mFeb 24 12:01[11;2H[30m[46m/media                         │      6│Apr 11  2018[43;2H[37m[44m/media      [46;3H[11;2H[97m/media                         [37m│[97m      6[37m│[97mApr 11  2018[12;2H[30m[46m/mnt                           │   4096│Feb 24 12:07[43;4H[37m[44mnt  [46;3H[12;2H[97m/mnt                           [37m│[97m   4096[37m│[97mFeb 24 12:07[13;2H[30m[46m/opt                           │      6│Apr 11  2018[43;3H[37m[44mop[46;3H[13;2H[97m/opt                           [37m│[97m      6[37m│[97mApr 11  2018[14;2H[30m[46m/proc                          │      0│Feb 24  2020[43;3H[37m[44mproc[46;3H[14;2H[97m/proc                          [37m│[97m      0[37m│[97mFeb 24  2020[15;2H[30m[46m/root                          │    213│Feb 24 10:25[43;3H[37m[44mroot[46;3H[15;2H[97m/root                          [37m│[97m    213[37m│[97mFeb 24 10:25[16;2H[30m[46m/run                           │    880│Feb 24 12:05[43;4H[37m[44mun [46;3H[16;2H[97m/run                           [37m│[97m    880[37m│[97mFeb 24 12:05[17;2H[30m[46m~sbin                          │      8│Feb 24 12:01[43;2H[37m[44m-> usr/sbin[46;3H[17;2H[97m~sbin                          [37m│[97m      8[37m│[97mFeb 24 12:01[18;2H[30m[46m/srv                           │      6│Apr 11  2018[43;2H[37m[44m/srv       [46;3H[18;2H[97m/srv                           [37m│[97m      6[37m│[97mApr 11  2018[19;2H[30m[46m/sys                           │      0│Feb 24 11:55[43;4H[37m[44mys[46;3H[19;2H[97m/sys                           [37m│[97m      0[37m│[97mFeb 24 11:55[20;2H[30m[46m/tmp                           │   4096│Feb 24 12:08[43;3H[37m[44mtmp[46;3H[20;2H[97m/tmp                           [37m│[97m   4096[37m│[97mFeb 24 12:08[21;2H[30m[46m/usr                           │    155│May 12  2018[43;3H[37m[44musr[46;3H[21;2H[97m/usr                           [37m│[97m    155[37m│[97mMay 12  2018[22;2H[30m[46m/vagrant                       │     42│Feb 24 09:50[43;3H[37m[44mvagrant[46;3H[21;2H[30m[46m/usr                           │    155│May 12  2018[22;2H[97m[44m/vagrant                       [37m│[97m     42[37m│[97mFeb 24 09:50[43;3H[37musr    [46;3H[20;2H[30m[46m/tmp                           │   4096│Feb 24 12:08[21;2H[97m[44m/usr                           [37m│[97m    155[37m│[97mMay 12  2018[43;3H[37mtmp[46;3H]0;mc [root@lvm]:/tmp>[2;6H[30m[47mtmp [4;2H[46m/..                            │UP--DIR│Feb 24 12:01[5;3H[97m[44m.ICE-unix[25C   6[37m│[97mMay 12  2018[6;3H.Test-unix[24C   6[37m│[97mMay 12  2018[7;3H.X11-unix[25C   6[37m│[97mMay 12  2018[8;3H.XIM-unix[27C 6[9;2H/.font-unix[27C6[37m│[97mMay 12  2018[10;2H/mc-root[30C6[9C1:39[11;4Hc-vagrant[29CFeb 24 11:10[12;3Holdvar[28C 238[12C8[13;3Hsystemd-private~service-ZpVaop[6C17[37m│[97mFeb 24 11:3[14;3Hsystemd-private~service-50d2Kk[6C17[8C11:55[15;2H[92m*vagrant-shell                 [37m│[92m    138[37m│[92mFeb 24 09:59[16;2H[37m                               │       │            [17;2H                               │       │            [18;2H                               │       │            [19;2H                               │       │            [20;2H                     [37m│[97m   8192[37m│[97mFeb 24 11:55[8;2H[30m[46m/home                          │     21│May 12  2018[43;3H[37m[44mhome[46;3H[8;2H[97m/home                          [37m│[97m     21[37m│[97mMay 12  2018[9;2H[30m[46m~lib                           │      7│Feb 24 12:01[43;2H[37m[44m-> usr/lib[46;3H[9;2H[97m~lib                           [37m│[97m      7[37m│[97mFeb 24 12:01[10;2H[30m[46m~lib64                         │      9│Feb 24 12:01[43;12H[37m[44m64[46;3H[10;2H[97m~lib64                         [37m│[97m      9[37m│[97mFeb 24 12:01[11;2H[30m[46m/media                         │      6│Apr 11  2018[43;2H[37m[44m/media      [46;3H[11;2H[97m/media                         [37m│[97m      6[37m│[97mApr 11  2018[12;2H[30m[46m/mnt                           │   4096│Feb 24 12:07[43;4H[37m[44mnt  [46;3H[12;2H[97m/mnt                           [37m│[97m   4096[37m│[97mFeb 24 12:07[13;2H[30m[46m/opt                           │      6│Apr 11  2018[43;3H[37m[44mop[46;3H[13;2H[97m/opt                           [37m│[97m      6[37m│[97mApr 11  2018[14;2H[30m[46m/proc                          │      0│Feb 24  2020[43;3H[37m[44mproc[46;3H[14;2H[97m/proc                          [37m│[97m      0[37m│[97mFeb 24  2020[15;2H[30m[46m/root                          │    213│Feb 24 10:25[43;3H[37m[44mroot[46;3H[15;2H[97m/root                          [37m│[97m    213[37m│[97mFeb 24 10:25[16;2H[30m[46m/run                           │    880│Feb 24 12:05[43;4H[37m[44mun [46;3H[16;2H[97m/run                           [37m│[97m    880[37m│[97mFeb 24 12:05[17;2H[30m[46m~sbin                          │      8│Feb 24 12:01[43;2H[37m[44m-> usr/sbin[46;3H[17;2H[97m~sbin                          [37m│[97m      8[37m│[97mFeb 24 12:01[18;2H[30m[46m/srv                           │      6│Apr 11  2018[43;2H[37m[44m/srv       [46;3H[18;2H[97m/srv                           [37m│[97m      6[37m│[97mApr 11  2018[19;2H[30m[46m/sys                           │      0│Feb 24 11:55[43;4H[37m[44mys[46;3H[19;2H[97m/sys                           [37m│[97m      0[37m│[97mFeb 24 11:55[20;2H[30m[46m/tmp                           │   4096│Feb 24 12:08[43;3H[37m[44mtmp[46;3H[20;2H[97m/tmp                           [37m│[97m   4096[37m│[97mFeb 24 12:08[21;2H[30m[46m/usr                           │    155│May 12  2018[43;3H[37m[44musr[46;3H[21;2H[97m/usr                           [37m│[97m    155[37m│[97mMay 12  2018[22;2H[30m[46m/vagrant                       │     42│Feb 24 09:50[43;3H[37m[44mvagrant[46;3H[21;2H[30m[46m/usr                           │    155│May 12  2018[22;2H[97m[44m/vagrant                       [37m│[97m     42[37m│[97mFeb 24 09:50[43;3H[37musr    [46;3H[20;2H[30m[46m/tmp                           │   4096│Feb 24 12:08[21;2H[97m[44m/usr                           [37m│[97m    155[37m│[97mMay 12  2018[43;3H[37mtmp[46;3H]0;mc [root@lvm]:/tmp>[2;6H[30m[47mtmp [4;2H[46m/..                            │UP--DIR│Feb 24 12:01[5;3H[97m[44m.ICE-unix[25C   6[37m│[97mMay 12  2018[6;3H.Test-unix[24C   6[37m│[97mMay 12  2018[7;3H.X11-unix[25C   6[37m│[97mMay 12  2018[8;3H.XIM-unix[27C 6[9;2H/.font-unix[27C6[37m│[97mMay 12  2018[10;2H/mc-root[30C6[9C1:39[11;4Hc-vagrant[29CFeb 24 11:10[12;3Holdvar[28C 238[12C8[13;3Hsystemd-private~service-ZpVaop[6C17[37m│[97mFeb 24 11:3[14;3Hsystemd-private~service-50d2Kk[6C17[8C11:55[15;2H[92m*vagrant-shell                 [37m│[92m    138[37m│[92mFeb 24 09:59[16;2H[37m                               │       │            [17;2H                               │       │            [18;2H                               │       │            [19;2H                               │       │            [20;                │       │            [21;2H                               │       │            [22;2H                               │       │            [23;2H                               │       │            [43;2HUP--DIR[46;3H[4;2H[97m/..                            [37m│[97mUP--DIR[37m│[97mFeb 24 12:01[5;2H[30m[46m/.ICE-unix                     │      6│May 12  2018[43;2H[37m[44m/.ICE-unix[46;3H[5;2H[97m/.ICE-unix                     [37m│[97m      6[37m│[97mMay 12  2018[6;2H[30m[46m/.Test-unix                    │      6│May 12  2018[43;4H[37m[44mTest-unix[46;3H[6;2H[97m/.Test-unix                    [37m│[97m      6[37m│[97mMay 12  2018[7;2H[30m[46m/.X11-unix                     │      6│May 12  2018[43;4H[37m[44mX11-unix [46;3H[7;2H[97m/.X11-unix                     [37m│[97m      6[37m│[97mMay 12  2018[8;2H[30m[46m/.XIM-unix                     │      6│May 12  2018[43;5H[37m[44mIM[46;3H[8;2H[97m/.XIM-unix                     [37m│[97m      6[37m│[97mMay 12  2018[9;2H[30m[46m/.font-unix                    │      6│May 12  2018[43;4H[37m[44mfont-unix[46;3H[9;2H[97m/.font-unix                    [37m│[97m      6[37m│[97mMay 12  2018[10;2H[30m[46m/mc-root                       │      6│Feb 24 11:39[43;3H[37m[44mmc-root   [46;3H[10;2H[97m/mc-root                       [37m│[97m      6[37m│[97mFeb 24 11:39[11;2H[30m[46m/mc-vagrant                    │      6│Feb 24 11:10[43;6H[37m[44mvagrant[46;3H[11;2H[97m/mc-vagrant                    [37m│[97m      6[37m│[97mFeb 24 11:10[12;2H[30m[46m/oldvar                        │    238│Feb 24 12:08[43;3H[37m[44moldvar    [46;3H]0;mc [root@lvm]:/tmp/oldvar>[2;9H[30m[47m/oldvar [4;2H[46m/..                            │UP--DIR│Feb 24 12:08[5;3H[97m[44madm      [30CApr 11[6;3Hcache     [26C44[7;3Hdb       [27C34[8;3Hempty    [27C18[9;3Hgames     [29CApr 11[10;3Hgopher [32CApr 11  2018[11;3Hkerberos  [26C18[37m│[97mMay 12  2018[12;2H/lib                           [37m│[97m   4096[37m│[97mFeb 24 12:01[13;3Hlocal                         [6C 6[37m│[97mApr 11  201[14;3Hlog                           [37m│[97m   4096[15;2H~mail                          [37m│[97m     10[37m│[97mFeb 24 12:01[16;2H/nis                           [37m│[97m      6[37m│[97mApr 11  2018[17;2H/opt                           [37m│[97m      6[37m│[97mApr 11  2018[18;2H/preserve                      [37m│[97m      6[37m│[97mApr 11  2018[19;2H/spool                         [37m│[97m     87[37m│[97mMay 12  2018[20;2H/tmp                           [37m│[97m    164[37m│[97mFeb 24 12:03[21;2H/yp                            [37m│[97m      6[37m│[97mApr 11  2018[22;2H[91m!lock                          [37m│[91m     11[37m│[91mFeb 24 12:01[23;2H!run                           [37m│[91m      6[37m│[91mFeb 24 12:01[43;2H[37mUP--DIR[46;3H]0;mc [root@lvm]:/tmp>[2;9H[30m[47m [37m[44m───────[4;2H[97m/..                            [37m│[97mUP--DIR[37m│[97mFeb 24 12:01[5;3H.ICE-unix[30CMay 12[6;3H.Test-unix[26C 6[7;3H.X11-unix[27C 6[8;3H.XIM-unix[27C 6[9;3H.font-unix[29CMay 12[10;3Hmc-root[32CFeb 24 11:39[11;3Hmc-vagrant[26C 6[37m│[97mFeb 24 11:10[12;2H[30m[46m/oldvar                        │    238│Feb 24 12:08[13;3H[97m[44msystemd-private~service-ZpVaop[6C17[37m│[97mFeb 24 11:3[14;3Hsystemd-private~service-50d2Kk[37m│[97m     17[15;2H[92m*vagrant-shell                 [37m│[92m    138[37m│[92mFeb 24 09:59[16;2H[37m                               │       │            [17;2H                               │       │            [18;2H                               │       │            [19;2H                               │       │            [20;2H                               │       │            [21;2H          2H                               │       │            [21;2H                               │       │            [22;2H                               │       │            [23;2H                               │       │            [43;2HUP--DIR[46;3H[4;2H[97m/..                            [37m│[97mUP--DIR[37m│[97mFeb 24 12:01[5;2H[30m[46m/.ICE-unix                     │      6│May 12  2018[43;2H[37m[44m/.ICE-unix[46;3H[5;2H[97m/.ICE-unix                     [37m│[97m      6[37m│[97mMay 12  2018[6;2H[30m[46m/.Test-unix                    │      6│May 12  2018[43;4H[37m[44mTest-unix[46;3H[6;2H[97m/.Test-unix                    [37m│[97m      6[37m│[97mMay 12  2018[7;2H[30m[46m/.X11-unix                     │      6│May 12  2018[43;4H[37m[44mX11-unix [46;3H[7;2H[97m/.X11-unix                     [37m│[97m      6[37m│[97mMay 12  2018[8;2H[30m[46m/.XIM-unix                     │      6│May 12  2018[43;5H[37m[44mIM[46;3H[8;2H[97m/.XIM-unix                     [37m│[97m      6[37m│[97mMay 12  2018[9;2H[30m[46m/.font-unix                    │      6│May 12  2018[43;4H[37m[44mfont-unix[46;3H[9;2H[97m/.font-unix                    [37m│[97m      6[37m│[97mMay 12  2018[10;2H[30m[46m/mc-root                       │      6│Feb 24 11:39[43;3H[37m[44mmc-root   [46;3H[10;2H[97m/mc-root                       [37m│[97m      6[37m│[97mFeb 24 11:39[11;2H[30m[46m/mc-vagrant                    │      6│Feb 24 11:10[43;6H[37m[44mvagrant[46;3H[11;2H[97m/mc-vagrant                    [37m│[97m      6[37m│[97mFeb 24 11:10[12;2H[30m[46m/oldvar                        │    238│Feb 24 12:08[43;3H[37m[44moldvar    [46;3H]0;mc [root@lvm]:/tmp/oldvar>[2;9H[30m[47m/oldvar [4;2H[46m/..                            │UP--DIR│Feb 24 12:08[5;3H[97m[44madm      [30CApr 11[6;3Hcache     [26C44[7;3Hdb       [27C34[8;3Hempty    [27C18[9;3Hgames     [29CApr 11[10;3Hgopher [32CApr 11  2018[11;3Hkerberos  [26C18[37m│[97mMay 12  2018[12;2H/lib                           [37m│[97m   4096[37m│[97mFeb 24 12:01[13;3Hlocal                         [6C 6[37m│[97mApr 11  201[14;3Hlog                           [37m│[97m   4096[15;2H~mail                          [37m│[97m     10[37m│[97mFeb 24 12:01[16;2H/nis                           [37m│[97m      6[37m│[97mApr 11  2018[17;2H/opt                           [37m│[97m      6[37m│[97mApr 11  2018[18;2H/preserve                      [37m│[97m      6[37m│[97mApr 11  2018[19;2H/spool                         [37m│[97m     87[37m│[97mMay 12  2018[20;2H/tmp                           [37m│[97m    164[37m│[97mFeb 24 12:03[21;2H/yp                            [37m│[97m      6[37m│[97mApr 11  2018[22;2H[91m!lock                          [37m│[91m     11[37m│[91mFeb 24 12:01[23;2H!run                           [37m│[91m      6[37m│[91mFeb 24 12:01[43;2H[37mUP--DIR[46;3H]0;mc [root@lvm]:/tmp>[2;9H[30m[47m [37m[44m───────[4;2H[97m/..                            [37m│[97mUP--DIR[37m│[97mFeb 24 12:01[5;3H.ICE-unix[30CMay 12[6;3H.Test-unix[26C 6[7;3H.X11-unix[27C 6[8;3H.XIM-unix[27C 6[9;3H.font-unix[29CMay 12[10;3Hmc-root[32CFeb 24 11:39[11;3Hmc-vagrant[26C 6[37m│[97mFeb 24 11:10[12;2H[30m[46m/oldvar                        │    238│Feb 24 12:08[13;3H[97m[44msystemd-private~service-ZpVaop[6C17[37m│[97mFeb 24 11:3[14;3Hsystemd-private~service-50d2Kk[37m│[97m     17[15;2H[92m*vagrant-shell                 [37m│[92m    138[37m│[92mFeb 24 09:59[16;2H[37m                               │       │            [17;2H                               │       │            [18;2H                               │       │            [19;2H                               │       │            [20;2H                               │       │                                 │       │            [22;2H                               │       │            [23;2H                               │       │            [43;2H/oldvar[46;3H[11;2H[30m[46m/mc-vagrant                    │      6│Feb 24 11:10[12;2H[97m[44m/oldvar                        [37m│[97m    238[37m│[97mFeb 24 12:08[43;3H[37mmc-vagrant[46;3H[10;2H[30m[46m/mc-root                       │      6│Feb 24 11:39[11;2H[97m[44m/mc-vagrant                    [37m│[97m      6[37m│[97mFeb 24 11:10[43;6H[37mroot   [46;3H[9;2H[30m[46m/.font-unix                    │      6│May 12  2018[10;2H[97m[44m/mc-root                       [37m│[97m      6[37m│[97mFeb 24 11:39[43;3H[37m.font-unix[46;3H[8;2H[30m[46m/.XIM-unix                     │      6│May 12  2018[9;2H[97m[44m/.font-unix                    [37m│[97m      6[37m│[97mMay 12  2018[43;4H[37mXIM-unix [46;3H[7;2H[30m[46m/.X11-unix                     │      6│May 12  2018[8;2H[97m[44m/.XIM-unix                     [37m│[97m      6[37m│[97mMay 12  2018[43;5H[37m11[46;3H[6;2H[30m[46m/.Test-unix                    │      6│May 12  2018[7;2H[97m[44m/.X11-unix                     [37m│[97m      6[37m│[97mMay 12  2018[43;4H[37mTest-unix[46;3H[5;2H[30m[46m/.ICE-unix                     │      6│May 12  2018[6;2H[97m[44m/.Test-unix                    [37m│[97m      6[37m│[97mMay 12  2018[43;4H[37mICE-unix [46;3H[4;2H[30m[46m/..                            │UP--DIR│Feb 24 12:01[5;2H[97m[44m/.ICE-unix                     [37m│[97m      6[37m│[97mMay 12  2018[43;2H[37mUP--DIR   [46;3H]0;mc [root@lvm]:/>[2;6H[30m[47m [37m[44m───[4;2H[97m~bin                           [37m│[97m      7[37m│[97mFeb 24 12:01[5;3Hboot     [25C4096[37m│[97mFeb 24 12:03[6;3Hdev       [24C3280[37m│[97mFeb 24 12:05[7;3Hetc      [25C8192[37m│[97mFeb 24 11:55[8;3Hhome     [27C21[9;2H~lib       [27C7[37m│[97mFeb 24 12:01[10;2H~lib64  [30C9[9C2:01[11;4Hedia     [29CApr 11  2018[12;3Hmnt   [28C4096[12C7[13;3Hopt                           [6C 6[37m│[97mApr 11  201[14;3Hproc                          [6C 0[8C 2020[15;2H/root                          [37m│[97m    213[37m│[97mFeb 24 10:25[16;2H/run                           [37m│[97m    880[37m│[97mFeb 24 12:05[17;2H~sbin                          [37m│[97m      8[37m│[97mFeb 24 12:01[18;2H/srv                           [37m│[97m      6[37m│[97mApr 11  2018[19;2H/sys                           [37m│[97m      0[37m│[97mFeb 24 11:55[20;2H[30m[46m/tmp                           │   4096│Feb 24 12:08[21;2H[97m[44m/usr                           [37m│[97m    155[37m│[97mMay 12  2018[22;2H/vagrant                       [37m│[97m     42[37m│[97mFeb 24 09:50[23;2H/var                           [37m│[97m     22[37m│[97mFeb 24 12:08[43;2H[37m/tmp   [46;3H[20;2H[97m/tmp                           [37m│[97m   4096[37m│[97mFeb 24 12:08[21;2H[30m[46m/usr                           │    155│May 12  2018[43;3H[37m[44musr[46;3H[20;2H[30m[46m/tmp                           │   4096│Feb 24 12:08[21;2H[97m[44m/usr                           [37m│[97m    155[37m│[97mMay 12  2018[43;3H[37mtmp[46;3H[19;2H[30m[46m/sys                           │      0│Feb 24 11:55[20;2H[97m[44m/tmp                           [37m│[97m   4096[37m│[97mFeb 24 12:08[43;3H[37msys[46;3H[18;2H[30m[46m/srv                           │      6│Apr 11  2018[19;2H[97m[44m/sys                           [37m│[97m      0[37m│[97mFeb 24 11:55[43;4H[37mrv[46;3H[17;2H[30m[46m~sbin                          │      8│Feb 24 12:01[18;2H[97m[44m/srv                           [37m│[97m      6[37m│[97mApr 11  2018[43;2H[37m-> usr/sbin[46;3H[16;2H[30m[46m/run                           │    880│Feb 24 12:05[1[21;2H                               │       │            [22;2H                               │       │            [23;2H                               │       │            [43;2H/oldvar[46;3H[11;2H[30m[46m/mc-vagrant                    │      6│Feb 24 11:10[12;2H[97m[44m/oldvar                        [37m│[97m    238[37m│[97mFeb 24 12:08[43;3H[37mmc-vagrant[46;3H[10;2H[30m[46m/mc-root                       │      6│Feb 24 11:39[11;2H[97m[44m/mc-vagrant                    [37m│[97m      6[37m│[97mFeb 24 11:10[43;6H[37mroot   [46;3H[9;2H[30m[46m/.font-unix                    │      6│May 12  2018[10;2H[97m[44m/mc-root                       [37m│[97m      6[37m│[97mFeb 24 11:39[43;3H[37m.font-unix[46;3H[8;2H[30m[46m/.XIM-unix                     │      6│May 12  2018[9;2H[97m[44m/.font-unix                    [37m│[97m      6[37m│[97mMay 12  2018[43;4H[37mXIM-unix [46;3H[7;2H[30m[46m/.X11-unix                     │      6│May 12  2018[8;2H[97m[44m/.XIM-unix                     [37m│[97m      6[37m│[97mMay 12  2018[43;5H[37m11[46;3H[6;2H[30m[46m/.Test-unix                    │      6│May 12  2018[7;2H[97m[44m/.X11-unix                     [37m│[97m      6[37m│[97mMay 12  2018[43;4H[37mTest-unix[46;3H[5;2H[30m[46m/.ICE-unix                     │      6│May 12  2018[6;2H[97m[44m/.Test-unix                    [37m│[97m      6[37m│[97mMay 12  2018[43;4H[37mICE-unix [46;3H[4;2H[30m[46m/..                            │UP--DIR│Feb 24 12:01[5;2H[97m[44m/.ICE-unix                     [37m│[97m      6[37m│[97mMay 12  2018[43;2H[37mUP--DIR   [46;3H]0;mc [root@lvm]:/>[2;6H[30m[47m [37m[44m───[4;2H[97m~bin                           [37m│[97m      7[37m│[97mFeb 24 12:01[5;3Hboot     [25C4096[37m│[97mFeb 24 12:03[6;3Hdev       [24C3280[37m│[97mFeb 24 12:05[7;3Hetc      [25C8192[37m│[97mFeb 24 11:55[8;3Hhome     [27C21[9;2H~lib       [27C7[37m│[97mFeb 24 12:01[10;2H~lib64  [30C9[9C2:01[11;4Hedia     [29CApr 11  2018[12;3Hmnt   [28C4096[12C7[13;3Hopt                           [6C 6[37m│[97mApr 11  201[14;3Hproc                          [6C 0[8C 2020[15;2H/root                          [37m│[97m    213[37m│[97mFeb 24 10:25[16;2H/run                           [37m│[97m    880[37m│[97mFeb 24 12:05[17;2H~sbin                          [37m│[97m      8[37m│[97mFeb 24 12:01[18;2H/srv                           [37m│[97m      6[37m│[97mApr 11  2018[19;2H/sys                           [37m│[97m      0[37m│[97mFeb 24 11:55[20;2H[30m[46m/tmp                           │   4096│Feb 24 12:08[21;2H[97m[44m/usr                           [37m│[97m    155[37m│[97mMay 12  2018[22;2H/vagrant                       [37m│[97m     42[37m│[97mFeb 24 09:50[23;2H/var                           [37m│[97m     22[37m│[97mFeb 24 12:08[43;2H[37m/tmp   [46;3H[20;2H[97m/tmp                           [37m│[97m   4096[37m│[97mFeb 24 12:08[21;2H[30m[46m/usr                           │    155│May 12  2018[43;3H[37m[44musr[46;3H[20;2H[30m[46m/tmp                           │   4096│Feb 24 12:08[21;2H[97m[44m/usr                           [37m│[97m    155[37m│[97mMay 12  2018[43;3H[37mtmp[46;3H[19;2H[30m[46m/sys                           │      0│Feb 24 11:55[20;2H[97m[44m/tmp                           [37m│[97m   4096[37m│[97mFeb 24 12:08[43;3H[37msys[46;3H[18;2H[30m[46m/srv                           │      6│Apr 11  2018[19;2H[97m[44m/sys                           [37m│[97m      0[37m│[97mFeb 24 11:55[43;4H[37mrv[46;3H[17;2H[30m[46m~sbin                          │      8│Feb 24 12:01[18;2H[97m[44m/srv                           [37m│[97m      6[37m│[97mApr 11  2018[43;2H[37m-> usr/sbin[46;3H[16;2H[30m[46m/run                           │    880│Feb 24 12:05[17;2H[97m[44m~sbin                          [37m│[97m      8[37m│[97mFeb 24 12:01[43;2H[37m/run       [46;3H[15;2H[30m[46m/root                          │    213│Feb 24 10:25[16;2H[97m[44m/run                           [37m│[97m    880[37m│[97mFeb 24 12:05[43;4H[37moot[46;3H[14;2H[30m[46m/proc                          │      0│Feb 24  2020[15;2H[97m[44m/root                          [37m│[97m    213[37m│[97mFeb 24 10:25[43;3H[37mproc[46;3H[13;2H[30m[46m/opt                           │      6│Apr 11  2018[14;2H[97m[44m/proc                          [37m│[97m      0[37m│[97mFeb 24  2020[43;3H[37mopt [46;3H[12;2H[30m[46m/mnt                           │   4096│Feb 24 12:07[13;2H[97m[44m/opt                           [37m│[97m      6[37m│[97mApr 11  2018[43;3H[37mmn[46;3H]0;mc [root@lvm]:/mnt>[2;6H[30m[47mmnt [4;2H[46m/..                            │UP--DIR│Feb 24 12:01[5;3H[97m[44madm [35CApr 11  2018[6;3Hcache[29C4096[37m│[97mMay 12  2018[7;3Hdb [31C4096[37m│[97mMay 12  2018[8;3Hempty[29C4096[9;2H/games[29C4096[37m│[97mApr 11  2018[10;2H/gopher[28C4096[37m│[97mApr 11  2018[11;3Hkerberos[26C4096[37m│[97mMay 12[12;2H/lib                           [37m│[97m   4096[37m│[97mFeb 24 12:01[13;3Hlocal[29C409[14;2H~lock[32C11[8C12:01[15;3Hlog [30C4096[9C1:5[16;3Hlost+found[23C16384[12C6[17;3Hmail[32C10[18;3Hnis[31C409[19;3Hopt[31C4096[37m│[97mApr 11  2018[20;3Hpreserve[31CApr 11  201[21;2H~run[32C  6[37m│[97mFeb 24 12:01[22;3Hspool  [27C4096[37m│[97mMay 12  2018[23;3Htmp[31C4096[12C3[24;2H/yp                            [37m│[97m   4096[37m│[97mApr 11  2018[43;2H[37mUP--DIR[44;34H── 784M/921M (85[46;3H]0;mc [root@lvm]:/>[39m[49m[24;41r[24;1H[1M[1;47r[2;6H[30m[47m [37m[44m───[4;2H[97m~bin                           [37m│[97m      7[37m│[97mFeb 24 12:01[5;3Hboot[35CFeb 24 12:03[6;3Hdev  [29C3280[37m│[97mFeb 24 12:05[7;3Hetc[31C8192[37m│[97mFeb 24 11:55[8;3Hhome [29C  21[9;2H~lib  [29C   7[37m│[97mFeb 24 12:01[10;2H~lib64 [28C   9[37m│[97mFeb 24 12:01[11;3Hmedia   [26C   6[37m│[97mApr 11[12;2H[30m[46m/mnt                           │   4096│Feb 24 12:07[13;3H[97m[44mopt  [29C   [14;2H/proc[32C 0[8C 2020[15;3Hroot[30C 213[9C0:2[16;3Hrun       [23C  880[12C5[17;3Hsbin[32C 8[18;3Hsrv[31C   [19;3Hsys[31C   0[37m│[97mFeb 24 11:55[20;3Htmp     [31CFeb 24 12:0[21;2H/usr[32C155[37m│[97mMay 12  2018[22;3Hvagrant[27C  42[37m│[97mFeb 24 09:50[23;3Hvar[31C  22[12C8[41;1H[37m│                               │       │            ││                                │       │            │[43;2H/mnt   [44;34H 7369M/8182M (90[46;3H[14;27H[30m[47m                                                        [15;27H ┌──────────────[34m The Midnight Commander [30m──────────────┐ [16;27H │ Do you really want to quit the Midnight Commander? │ [17;27H ├────────────────────────────────────────────────────┤ [18;27H │                  [46m[ [34mY[30mes ][47m  [ [34mN[30mo ]                   │ [19;27H └────────────────────────────────────────────────────┘ [20;27H                                                        [18;49H[45;7H[39m[49mSelecting directories: add a slash to the end of the matching pattern.[45;109H[1;1H[K
+]0;root@lvm:/[root@lvm /]# 7;2H[97m[44m~sbin                          [37m│[97m      8[37m│[97mFeb 24 12:01[43;2H[37m/run       [46;3H[15;2H[30m[46m/root                          │    213│Feb 24 10:25[16;2H[97m[44m/run                           [37m│[97m    880[37m│[97mFeb 24 12:05[43;4H[37moot[46;3H[14;2H[30m[46m/proc                          │      0│Feb 24  2020[15;2H[97m[44m/root                          [37m│[97m    213[37m│[97mFeb 24 10:25[43;3H[37mproc[46;3H[13;2H[30m[46m/opt                           │      6│Apr 11  2018[14;2H[97m[44m/proc                          [37m│[97m      0[37m│[97mFeb 24  2020[43;3H[37mopt [46;3H[12;2H[30m[46m/mnt                           │   4096│Feb 24 12:07[13;2H[97m[44m/opt                           [37m│[97m      6[37m│[97mApr 11  2018[43;3H[37mmn[46;3H]0;mc [root@lvm]:/mnt>[2;6H[30m[47mmnt [4;2H[46m/..                            │UP--DIR│Feb 24 12:01[5;3H[97m[44madm [35CApr 11  2018[6;3Hcache[29C4096[37m│[97mMay 12  2018[7;3Hdb [31C4096[37m│[97mMay 12  2018[8;3Hempty[29C4096[9;2H/games[29C4096[37m│[97mApr 11  2018[10;2H/gopher[28C4096[37m│[97mApr 11  2018[11;3Hkerberos[26C4096[37m│[97mMay 12[12;2H/lib                           [37m│[97m   4096[37m│[97mFeb 24 12:01[13;3Hlocal[29C409[14;2H~lock[32C11[8C12:01[15;3Hlog [30C4096[9C1:5[16;3Hlost+found[23C16384[12C6[17;3Hmail[32C10[18;3Hnis[31C409[19;3Hopt[31C4096[37m│[97mApr 11  2018[20;3Hpreserve[31CApr 11  201[21;2H~run[32C  6[37m│[97mFeb 24 12:01[22;3Hspool  [27C4096[37m│[97mMay 12  2018[23;3Htmp[31C4096[12C3[24;2H/yp                            [37m│[97m   4096[37m│[97mApr 11  2018[43;2H[37mUP--DIR[44;34H── 784M/921M (85[46;3H]0;mc [root@lvm]:/>[39m[49m[24;41r[24;1H[1M[1;47r[2;6H[30m[47m [37m[44m───[4;2H[97m~bin                           [37m│[97m      7[37m│[97mFeb 24 12:01[5;3Hboot[35CFeb 24 12:03[6;3Hdev  [29C3280[37m│[97mFeb 24 12:05[7;3Hetc[31C8192[37m│[97mFeb 24 11:55[8;3Hhome [29C  21[9;2H~lib  [29C   7[37m│[97mFeb 24 12:01[10;2H~lib64 [28C   9[37m│[97mFeb 24 12:01[11;3Hmedia   [26C   6[37m│[97mApr 11[12;2H[30m[46m/mnt                           │   4096│Feb 24 12:07[13;3H[97m[44mopt  [29C   [14;2H/proc[32C 0[8C 2020[15;3Hroot[30C 213[9C0:2[16;3Hrun       [23C  880[12C5[17;3Hsbin[32C 8[18;3Hsrv[31C   [19;3Hsys[31C   0[37m│[97mFeb 24 11:55[20;3Htmp     [31CFeb 24 12:0[21;2H/usr[32C155[37m│[97mMay 12  2018[22;3Hvagrant[27C  42[37m│[97mFeb 24 09:50[23;3Hvar[31C  22[12C8[41;1H[37m│                               │       │            ││                                │       │            │[43;2H/mnt   [44;34H 7369M/8182M (90[46;3H[14;27H[30m[47m                                                        [15;27H ┌──────────────[34m The Midnight Commander [30m──────────────┐ [16;27H │ Do you really want to quit the Midnight Commander? │ [17;27H ├────────────────────────────────────────────────────┤ [18;27H │                  [46m[ [34mY[30mes ][47m  [ [34mN[30mo ]                   │ [19;27H └────────────────────────────────────────────────────┘ [20;27H                                                        [18;49H[45;7H[39m[49mSelecting directories: add a slash to the end of the matching pattern.[45;109H[1;1H[K
+]0;root@lvm:/[root@lvm /]# umount /mnt
+]0;root@lvm:/[root@lvm /]# mount /dev/vg_var/lv_var /var
+]0;root@lvm:/[root@lvm /]# echo "`blkid | grep var: | awk '{print $2}'` /var ext4 defaults 0 0" >> /etc/fstab
+]0;root@lvm:/[root@lvm /]# nan [Ko /etc/fstab 
+exit
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# rev[Kboot
+Connection to 127.0.0.1 closed by remote host.
+Connection to 127.0.0.1 closed.
+]0;root@MSK-IT: /home/ayudin/stands-03-lvm-masterroot@MSK-IT:/home/ayudin/stands-03-lvm-master# mc
+[?1049h[22;0;0t[1;47r[4l[47;1H(B[m[37m[40m(B[m[39;49m[K[?1049l[23;0;0t[?1001s[?1002h[?1006h[?2004h[?1049h[22;0;0t[1;47r[4l[?1h=(B[m[39m[49m[1;47r[H[2J[2;108H[1K [37m[44m┐[2;109H]0;mc [root@MSK-IT]:/home/ayudin/stands-03-lvm-master>[45;1H[39m[49mHint: Want your plain shell? Press C-o, and get back to MC with C-o again.[45;109H]0;mc [root@MSK-IT]:/home/ayudin/stands-03-lvm-master>[1;1H[30m[46m  Left     File     Command     Options     Right[K
+[37m[44m┌<─[30m[47m /home/ayudin/stands-03-lvm-master [37m[44m──────────.[^]>┐┌<─ /home/ayudin/stands-03-lvm-master ───────────.[^]>
+│[93m.n            Name             [37m│[93m Size  [37m│[93mModify time [37m││[93m.n            Name              [37m│[93m Size  [37m│[93mModify time [37m│[4;1H│[30m[46m/..                            │UP--DIR│фев 24 12:49[37m[44m││[97m/..                             [37m│[97mUP--DIR[37m│[97mфев 24 12:49[37m│[5;1H│[97m/.vagrant                      [37m│[97m   4096[37m│[97mфев 24 12:51[37m││[97m/.vagrant                       [37m│[97m   4096[37m│[97mфев 24 12:51[37m│[6;1H│ README.md                     │    109│фев  7  2019││ README.md                      │    109│фев  7  2019│[7;1H│ Vagrantfile                   │   2417│фев  7  2019││ Vagrantfile                    │   2417│фев  7  2019│[8;1H│ lvm.log                       │ 835584│фев 24 15:08││ lvm.log                        │ 835584│фев 24 15:08│[9;1H│ lvm2.log                      │ 102400│фев 24 15:09││ lvm2.log                       │ 102400│фев 24 15:09│[10;1H│                               │       │            ││                                │       │            │[11;1H│                               │       │            ││                                │       │            │[12;1H│                               │       │            ││                                │       │            │[13;1H│                               │       │            ││                                │       │            │[14;1H│                 umount /mnt
+]0;root@lvm:/[root@lvm /]# mount /dev/vg_var/lv_var /var
+]0;root@lvm:/[root@lvm /]# echo "`blkid | grep var: | awk '{print $2}'` /var ext4 defaults 0 0" >> /etc/fstab
+]0;root@lvm:/[root@lvm /]# nan [Ko /etc/fstab 
+exit
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# rev[Kboot
+Connection to 127.0.0.1 closed by remote host.
+Connection to 127.0.0.1 closed.
+]0;root@MSK-IT: /home/ayudin/stands-03-lvm-masterroot@MSK-IT:/home/ayudin/stands-03-lvm-master# mc
+[?1049h[22;0;0t[1;47r[4l[47;1H(B[m[37m[40m(B[m[39;49m[K[?1049l[23;0;0t[?1001s[?1002h[?1006h[?2004h[?1049h[22;0;0t[1;47r[4l[?1h=(B[m[39m[49m[1;47r[H[2J[2;108H[1K [37m[44m┐[2;109H]0;mc [root@MSK-IT]:/home/ayudin/stands-03-lvm-master>[45;1H[39m[49mHint: Want your plain shell? Press C-o, and get back to MC with C-o again.[45;109H]0;mc [root@MSK-IT]:/home/ayudin/stands-03-lvm-master>[1;1H[30m[46m  Left     File     Command     Options     Right[K
+[37m[44m┌<─[30m[47m /home/ayudin/stands-03-lvm-master [37m[44m──────────.[^]>┐┌<─ /home/ayudin/stands-03-lvm-master ───────────.[^]>
+│[93m.n            Name             [37m│[93m Size  [37m│[93mModify time [37m││[93m.n            Name              [37m│[93m Size  [37m│[93mModify time [37m│[4;1H│[30m[46m/..                            │UP--DIR│фев 24 12:49[37m[44m││[97m/..                             [37m│[97mUP--DIR[37m│[97mфев 24 12:49[37m│[5;1H│[97m/.vagrant                      [37m│[97m   4096[37m│[97mфев 24 12:51[37m││[97m/.vagrant                       [37m│[97m   4096[37m│[97mфев 24 12:51[37m│[6;1H│ README.md                     │    109│фев  7  2019││ README.md                      │    109│фев  7  2019│[7;1H│ Vagrantfile                   │   2417│фев  7  2019││ Vagrantfile                    │   2417│фев  7  2019│[8;1H│ lvm.log                       │ 835584│фев 24 15:08││ lvm.log                        │ 835584│фев 24 15:08│[9;1H│ lvm2.log                      │ 102400│фев 24 15:09││ lvm2.log                       │ 102400│фев 24 15:09│[10;1H│                               │       │            ││                                │       │            │[11;1H│                               │       │            ││                                │       │            │[12;1H│                               │       │            ││                                │       │            │[13;1H│                               │       │            ││                                │       │            │[14;1H│              │       │            ││                                │       │            │[15;1H│                               │       │            ││                                │       │            │[16;1H│                               │       │            ││                                │       │            │[17;1H│                               │       │            ││                                │       │            │[18;1H│                               │       │            ││                                │       │            │[19;1H│                               │       │            ││                                │       │            │[20;1H│                               │       │            ││                                │       │            │[21;1H│                               │       │            ││                                │       │            │[22;1H│                               │       │            ││                                │       │            │[23;1H│                               │       │            ││                                │       │            │[24;1H│                               │       │            ││                                │       │            │[25;1H│                               │       │            ││                                │       │            │[26;1H│                               │       │            ││                                │       │            │[27;1H│                               │       │            ││                                │       │            │[28;1H│                               │       │            ││                                │       │            │[29;1H│                               │       │            ││                                │       │            │[30;1H│                               │       │            ││                                │       │            │[31;1H│                               │       │            ││                                │       │            │[32;1H│                               │       │            ││                                │       │            │[33;1H│                               │       │            ││                                │       │            │[34;1H│                               │       │            ││                                │       │            │[35;1H│                               │       │            ││                                │       │            │[36;1H│                               │       │            ││                                │       │            │[37;1H│                               │       │            ││                                │       │            │[38;1H│                               │       │            ││                                │       │            │[39;1H│                               │       │            ││                                │       │            │[40;1H│                               │       │            ││                                │       │            │[41;1H│                               │       │            ││                                │       │            │[42;1H├────────────────────────────────────────────────────┤├─────────────────────────────────────────────────────┤[43;1H│UP--DIR                                             ││UP--DIR                                                 │       │            ││                                │       │            │[15;1H│                               │       │            ││                                │       │            │[16;1H│                               │       │            ││                                │       │            │[17;1H│                               │       │            ││                                │       │            │[18;1H│                               │       │            ││                                │       │            │[19;1H│                               │       │            ││                                │       │            │[20;1H│                               │       │            ││                                │       │            │[21;1H│                               │       │            ││                                │       │            │[22;1H│                               │       │            ││                                │       │            │[23;1H│                               │       │            ││                                │       │            │[24;1H│                               │       │            ││                                │       │            │[25;1H│                               │       │            ││                                │       │            │[26;1H│                               │       │            ││                                │       │            │[27;1H│                               │       │            ││                                │       │            │[28;1H│                               │       │            ││                                │       │            │[29;1H│                               │       │            ││                                │       │            │[30;1H│                               │       │            ││                                │       │            │[31;1H│                               │       │            ││                                │       │            │[32;1H│                               │       │            ││                                │       │            │[33;1H│                               │       │            ││                                │       │            │[34;1H│                               │       │            ││                                │       │            │[35;1H│                               │       │            ││                                │       │            │[36;1H│                               │       │            ││                                │       │            │[37;1H│                               │       │            ││                                │       │            │[38;1H│                               │       │            ││                                │       │            │[39;1H│                               │       │            ││                                │       │            │[40;1H│                               │       │            ││                                │       │            │[41;1H│                               │       │            ││                                │       │            │[42;1H├────────────────────────────────────────────────────┤├─────────────────────────────────────────────────────┤[43;1H│UP--DIR                                             ││UP--DIR                             │[44;1H└──────────────────────────────────── 23G/51G (45%) ─┘└───────────────────────────────────── 23G/51G (45%) ─┘[46;1H[39m[49mroot@MSK-IT:~#[92C[37m[44m[^][47;1H[97m[40m 1[30m[46mHelp    [97m[40m 2[30m[46mMenu     [97m[40m 3[30m[46mView     [97m[40m 4[30m[46mEdit     [97m[40m 5[30m[46mCopy     [97m[40m 6[30m[46mRenMov   [97m[40m 7[30m[46mMkdir    [97m[40m 8[30m[46mDelete   [97m[40m 9[30m[46mPullDn   [97m[40m10[30m[46mQuit[K[46;16H[46;13H[39m[49m/home/ayudin/stands-03-lvm-master#[60C[46;48H[1;1H[K
+]0;root@MSK-IT: /home/ayudin/stands-03-lvm-masterroot@MSK-IT:/home/ayudin/stands-03-lvm-master# mcvagrant ssh
+^C]0;root@MSK-IT: /home/ayudin/stands-03-lvm-masterroot@MSK-IT:/home/ayudin/stands-03-lvm-master# vagrant ssh
+ssh_exchange_identification: read: Connection reset by peer
+]0;root@MSK-IT: /home/ayudin/stands-03-lvm-masterroot@MSK-IT:/home/ayudin/stands-03-lvm-master# vagrant ssh
+Last login: Mon Feb 24 11:56:38 2020 from 10.0.2.2
+]0;vagrant@lvm:~[?1034h[vagrant@lvm ~]$ sudo su
+]0;root@lvm:/home/vagrant[?1034h[root@lvm vagrant]# lsblk
+NAME                     MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                        8:0    0   40G  0 disk 
+├─sda1                     8:1    0    1M  0 part 
+├─sda2                     8:2    0    1G  0 part /boot
+└─sda3                     8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00  253:0    0    8G  0 lvm  /
+  └─VolGroup00-LogVol01  253:1    0  1.5G  0 lvm  [SWAP]
+sdb                        8:16   0   10G  0 disk 
+└─vg_root-lv_root        253:7    0   10G  0 lvm  
+sdc                        8:32   0    2G  0 disk 
+├─vg_var-lv_var_rmeta_0  253:2    0    4M  0 lvm  
+│ └─vg_var-lv_var        253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_0 253:3    0  952M  0 lvm  
+  └─vg_var-lv_var        253:6    0  952M  0 lvm  /var
+sdd                        8:48   0    1G  0 disk 
+├─vg_var-lv_var_rmeta_1  253:4    0    4M  0 lvm  
+│ └─vg_var-lv_var        253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_1 253:5    0  952M  0 lvm  
+  └─vg_var-lv_var        253:6    0  952M  0 lvm  /var
+sde                        8:64   0    1G  0 disk 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lvremove /dev/vg_root/lv_root
+Do you really want to remove active logical volume vg_root/lv_root? [y/n]: y
+  Logical volume "lv_root" successfully removed
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# vgremove /dev/vg_root
+  Volume group "vg_root" successfully removed
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# pvremove /dev/sdb
+  Labels on physical volume "/dev/sdb" successfully wiped.
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# pvremove /dev/sdbvgremove /dev/vg_rootlvremove /dev/vg_root/lv_root[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csblk[K
+NAME                     MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                        8:0    0   40G  0 disk 
+├─sda1                     8:1    0    1M  0 part 
+├─sda2                     8:2    0    1G  0 part /boot
+└─sda3                     8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00  253:0    0    8G  0 lvm  /
+  └─VolGroup00-LogVol01  253:1    0  1.5G  0 lvm  [SWAP]
+sdb                        8:16   0   10G  0 disk 
+sdc                        8:32   0    2G  0 disk 
+├─vg_var-lv_var_rmeta_0  253:2    0    4M  0 lvm  
+│ └─vg_var-lv_var        253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_0 253:3    0  952M  0 lvm                                               │[44;1H└──────────────────────────────────── 23G/51G (45%) ─┘└───────────────────────────────────── 23G/51G (45%) ─┘[46;1H[39m[49mroot@MSK-IT:~#[92C[37m[44m[^][47;1H[97m[40m 1[30m[46mHelp    [97m[40m 2[30m[46mMenu     [97m[40m 3[30m[46mView     [97m[40m 4[30m[46mEdit     [97m[40m 5[30m[46mCopy     [97m[40m 6[30m[46mRenMov   [97m[40m 7[30m[46mMkdir    [97m[40m 8[30m[46mDelete   [97m[40m 9[30m[46mPullDn   [97m[40m10[30m[46mQuit[K[46;16H[46;13H[39m[49m/home/ayudin/stands-03-lvm-master#[60C[46;48H[1;1H[K
+]0;root@MSK-IT: /home/ayudin/stands-03-lvm-masterroot@MSK-IT:/home/ayudin/stands-03-lvm-master# mcvagrant ssh
+^C]0;root@MSK-IT: /home/ayudin/stands-03-lvm-masterroot@MSK-IT:/home/ayudin/stands-03-lvm-master# vagrant ssh
+ssh_exchange_identification: read: Connection reset by peer
+]0;root@MSK-IT: /home/ayudin/stands-03-lvm-masterroot@MSK-IT:/home/ayudin/stands-03-lvm-master# vagrant ssh
+Last login: Mon Feb 24 11:56:38 2020 from 10.0.2.2
+]0;vagrant@lvm:~[?1034h[vagrant@lvm ~]$ sudo su
+]0;root@lvm:/home/vagrant[?1034h[root@lvm vagrant]# lsblk
+NAME                     MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                        8:0    0   40G  0 disk 
+├─sda1                     8:1    0    1M  0 part 
+├─sda2                     8:2    0    1G  0 part /boot
+└─sda3                     8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00  253:0    0    8G  0 lvm  /
+  └─VolGroup00-LogVol01  253:1    0  1.5G  0 lvm  [SWAP]
+sdb                        8:16   0   10G  0 disk 
+└─vg_root-lv_root        253:7    0   10G  0 lvm  
+sdc                        8:32   0    2G  0 disk 
+├─vg_var-lv_var_rmeta_0  253:2    0    4M  0 lvm  
+│ └─vg_var-lv_var        253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_0 253:3    0  952M  0 lvm  
+  └─vg_var-lv_var        253:6    0  952M  0 lvm  /var
+sdd                        8:48   0    1G  0 disk 
+├─vg_var-lv_var_rmeta_1  253:4    0    4M  0 lvm  
+│ └─vg_var-lv_var        253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_1 253:5    0  952M  0 lvm  
+  └─vg_var-lv_var        253:6    0  952M  0 lvm  /var
+sde                        8:64   0    1G  0 disk 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lvremove /dev/vg_root/lv_root
+Do you really want to remove active logical volume vg_root/lv_root? [y/n]: y
+  Logical volume "lv_root" successfully removed
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# vgremove /dev/vg_root
+  Volume group "vg_root" successfully removed
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# pvremove /dev/sdb
+  Labels on physical volume "/dev/sdb" successfully wiped.
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# pvremove /dev/sdbvgremove /dev/vg_rootlvremove /dev/vg_root/lv_root[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csblk[K
+NAME                     MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                        8:0    0   40G  0 disk 
+├─sda1                     8:1    0    1M  0 part 
+├─sda2                     8:2    0    1G  0 part /boot
+└─sda3                     8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00  253:0    0    8G  0 lvm  /
+  └─VolGroup00-LogVol01  253:1    0  1.5G  0 lvm  [SWAP]
+sdb                        8:16   0   10G  0 disk 
+sdc                        8:32   0    2G  0 disk 
+├─vg_var-lv_var_rmeta_0  253:2    0    4M  0 lvm  
+│ └─vg_var-lv_var        253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_0 253:3    
+  └─vg_var-lv_var        253:6    0  952M  0 lvm  /var
+sdd                        8:48   0    1G  0 disk 
+├─vg_var-lv_var_rmeta_1  253:4    0    4M  0 lvm  
+│ └─vg_var-lv_var        253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_1 253:5    0  952M  0 lvm  
+  └─vg_var-lv_var        253:6    0  952M  0 lvm  /var
+sde                        8:64   0    1G  0 disk 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lvcreate -n LogVol_Home -L 2G /dev/VolGroup00
+  Logical volume "LogVol_Home" created.
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lvcreate -n LogVol_Home -L 2G /dev/VolGroup00[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csblk[K
+NAME                       MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                          8:0    0   40G  0 disk 
+├─sda1                       8:1    0    1M  0 part 
+├─sda2                       8:2    0    1G  0 part /boot
+└─sda3                       8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00    253:0    0    8G  0 lvm  /
+  ├─VolGroup00-LogVol01    253:1    0  1.5G  0 lvm  [SWAP]
+  └─VolGroup00-LogVol_Home 253:7    0    2G  0 lvm  
+sdb                          8:16   0   10G  0 disk 
+sdc                          8:32   0    2G  0 disk 
+├─vg_var-lv_var_rmeta_0    253:2    0    4M  0 lvm  
+│ └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_0   253:3    0  952M  0 lvm  
+  └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+sdd                          8:48   0    1G  0 disk 
+├─vg_var-lv_var_rmeta_1    253:4    0    4M  0 lvm  
+│ └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_1   253:5    0  952M  0 lvm  
+  └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+sde                          8:64   0    1G  0 disk 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mkfs.xfs /dev/VolGroup00/LogVol_Home
+meta-data=/dev/VolGroup00/LogVol_Home isize=512    agcount=4, agsize=131072 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0, sparse=0
+data     =                       bsize=4096   blocks=524288, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=2560, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mount /dev/VolGroup00/LogVol_Home /mnt/
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# cp -aR /home/* /mnt/
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# ls /mnt
+[0m[38;5;27mvagrant[0m
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# rm -rf /home/*
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mc
+[?1049h[1;47r[4l[47;1H(B[m[37m[40m(B[m[39;49m[K[?1049l[?1001s[?1002h[?1015h7[?47h[?1049h[1;47r[4l[?1h=(B[m[39m[49m[1;47r[H[2J[46;1H[root@lvm ~]#[46;109H]0;mc [root@lvm]:/>]0;mc [root@lvm]:/>[2;1H[37m[44m┌<─[30m[47m / [37m[44m──────────────────────────────────────────.[^]>┐
+│[52C│
+│[30m[46m~bin                           │      7│Feb 24 12:01[37m[44m│
+│[97m/boot                          [37m│[97m   4096[37m│[97mFeb 24 12:03[37m│
+│[97m/dev                           [37m│[97m   3060[37m│[97mFeb 24 12:16[37m│
+│[97m/etc                           [37m│[97m   8192[37m│[97mFeb 24 11:55[37m│
+│[97m/home                          [37m│[97m      6[37m│[97mFeb 24 12:17[37m│
+│[97m~lib                           [37m│[97m      7[37m│[97mFeb 24 12:01[37m│
+│[97m~lib64                         [37m│[97m      9[37m│[97mFeb 24 12:01[37m│
+│[97m/media                         [37m│[97m      6[37m│[97mApr 11  2018[37m│
+│[97m/mnt                           [37m│[97m     21[37m│[97mFeb 24 12:17[37m│
+│[97m/opt                           [37m│[97m      6[37m│[97mApr 11  2018[37m│
+│[97m/proc                          [37m│[97m      0[37m│[97mFeb 24  2020[37m│
+│[97m/root                          [37m│[97m    213[37m│[97mFeb 24 10:25[37m│
+│[97m/run                           [37m│[97m    660[37m│[97mFeb 24 12:14[37m│
+│[97m~sbin                          [37m│[97m      8[37m│[97mFeb 24 12:01[37m│
+│[97m/srv                           [37m│[97m      6[37m│[97mApr 11  2018[37m│
+│[97m/sys                           [37m│[97m      0[37m│[97mFeb 24 12:11[37m│
+│[97m/tmp                           [37m│[97m   4096[37m│[97mFeb 24 12:12[37m│
+│[97m/usr                           [37m│[97m    155[37m│[97mMay 12  2018[37m│
+│[97m/vagrant                       [37m│[97m     42[37m│[97mFeb 24 09:50[37m│
+│[97m/var                           [37m│[97m   4096[37m│[97mFeb 24 12:11[37m│
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+├[52C┤
+│[52C│
+└──────────────────────────────── 7369M/8182M (90%) ─┘
+[39m[49mHint: Want to see your *~ backup files? Set it in the Configuration dialog.
+
+[97m[40m 1[30m[46mHelp    [97m[40m 2[30m[46mMenu     [97m[40m 3[30m[46mView     [97m[40m 4[30m[46mEdit     [97m[40m 5[30m[46mCopy     [97m[40m 6[30m[46mRenMov   [97m[40m 7[30m[46mMkdir    [97m[40m 8[30m[46mDelete   [97m[40m 9[30m[46mPullDn   [97m[40m10[30m[46mQuit[K[45;109H]0;mc [root@lvm]:/>]0;mc [root@lvm]:/>[1;1H  Left     File     Command     Options     Right[K[2;55H[37m[44m┌<─ / ───────────────────────────────────────────.[^]>┐[3;2H[93m'n            Name             [37m│[93m Size  [37m│[93mModify time [37m││[93m'n            Name              [37m│[93m Size  [37m│[93mModify time [37m│[4;55H│[97m~bin                            [37m│[97m      7[37m│[97mFeb 24 12:01[37m│[5;55H│[97m/boot                           [37m│[97m   4096[37m│[97mFeb 24 12:03[37m│[6;55H│[97m/dev                            [37m│[97m   3060[37m│[97mFeb 24 12:16[37m│[7;55H│[97m/etc                            [37m│[97m   8192[37m│[97mFeb 24 11:55[37m│[8;55H│[97m/home                           [37m│[97m      6[37m│[97mFeb 24 12:17[37m│[9;55H│[97m~lib                            [37m│[97m      7[37m│[97mFeb 24 12:01[37m│[10;55H│[97m~lib64                          [37m│[97m      9[37m│[97mFeb 24 12:01[37m│[11;55H│[97m/media                          [37m│[97m      6[37m│[97mApr 11 0  952M  0 lvm  
+  └─vg_var-lv_var        253:6    0  952M  0 lvm  /var
+sdd                        8:48   0    1G  0 disk 
+├─vg_var-lv_var_rmeta_1  253:4    0    4M  0 lvm  
+│ └─vg_var-lv_var        253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_1 253:5    0  952M  0 lvm  
+  └─vg_var-lv_var        253:6    0  952M  0 lvm  /var
+sde                        8:64   0    1G  0 disk 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lvcreate -n LogVol_Home -L 2G /dev/VolGroup00
+  Logical volume "LogVol_Home" created.
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# lvcreate -n LogVol_Home -L 2G /dev/VolGroup00[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csblk[K
+NAME                       MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                          8:0    0   40G  0 disk 
+├─sda1                       8:1    0    1M  0 part 
+├─sda2                       8:2    0    1G  0 part /boot
+└─sda3                       8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00    253:0    0    8G  0 lvm  /
+  ├─VolGroup00-LogVol01    253:1    0  1.5G  0 lvm  [SWAP]
+  └─VolGroup00-LogVol_Home 253:7    0    2G  0 lvm  
+sdb                          8:16   0   10G  0 disk 
+sdc                          8:32   0    2G  0 disk 
+├─vg_var-lv_var_rmeta_0    253:2    0    4M  0 lvm  
+│ └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_0   253:3    0  952M  0 lvm  
+  └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+sdd                          8:48   0    1G  0 disk 
+├─vg_var-lv_var_rmeta_1    253:4    0    4M  0 lvm  
+│ └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_1   253:5    0  952M  0 lvm  
+  └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+sde                          8:64   0    1G  0 disk 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mkfs.xfs /dev/VolGroup00/LogVol_Home
+meta-data=/dev/VolGroup00/LogVol_Home isize=512    agcount=4, agsize=131072 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0, sparse=0
+data     =                       bsize=4096   blocks=524288, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=2560, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mount /dev/VolGroup00/LogVol_Home /mnt/
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# cp -aR /home/* /mnt/
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# ls /mnt
+[0m[38;5;27mvagrant[0m
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# rm -rf /home/*
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mc
+[?1049h[1;47r[4l[47;1H(B[m[37m[40m(B[m[39;49m[K[?1049l[?1001s[?1002h[?1015h7[?47h[?1049h[1;47r[4l[?1h=(B[m[39m[49m[1;47r[H[2J[46;1H[root@lvm ~]#[46;109H]0;mc [root@lvm]:/>]0;mc [root@lvm]:/>[2;1H[37m[44m┌<─[30m[47m / [37m[44m──────────────────────────────────────────.[^]>┐
+│[52C│
+│[30m[46m~bin                           │      7│Feb 24 12:01[37m[44m│
+│[97m/boot                          [37m│[97m   4096[37m│[97mFeb 24 12:03[37m│
+│[97m/dev                           [37m│[97m   3060[37m│[97mFeb 24 12:16[37m│
+│[97m/etc                           [37m│[97m   8192[37m│[97mFeb 24 11:55[37m│
+│[97m/home                          [37m│[97m      6[37m│[97mFeb 24 12:17[37m│
+│[97m~lib                           [37m│[97m      7[37m│[97mFeb 24 12:01[37m│
+│[97m~lib64                         [37m│[97m      9[37m│[97mFeb 24 12:01[37m│
+│[97m/media                         [37m│[97m      6[37m│[97mApr 11  2018[37m│
+│[97m/mnt                           [37m│[97m     21[37m│[97mFeb 24 12:17[37m│
+│[97m/opt                           [37m│[97m      6[37m│[97mApr 11  2018[37m│
+│[97m/proc                          [37m│[97m      0[37m│[97mFeb 24  2020[37m│
+│[97m/root                          [37m│[97m    213[37m│[97mFeb 24 10:25[37m│
+│[97m/run                           [37m│[97m    660[37m│[97mFeb 24 12:14[37m│
+│[97m~sbin                          [37m│[97m      8[37m│[97mFeb 24 12:01[37m│
+│[97m/srv                           [37m│[97m      6[37m│[97mApr 11  2018[37m│
+│[97m/sys                           [37m│[97m      0[37m│[97mFeb 24 12:11[37m│
+│[97m/tmp                           [37m│[97m   4096[37m│[97mFeb 24 12:12[37m│
+│[97m/usr                           [37m│[97m    155[37m│[97mMay 12  2018[37m│
+│[97m/vagrant                       [37m│[97m     42[37m│[97mFeb 24 09:50[37m│
+│[97m/var                           [37m│[97m   4096[37m│[97mFeb 24 12:11[37m│
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+├[52C┤
+│[52C│
+└──────────────────────────────── 7369M/8182M (90%) ─┘
+[39m[49mHint: Want to see your *~ backup files? Set it in the Configuration dialog.
+
+[97m[40m 1[30m[46mHelp    [97m[40m 2[30m[46mMenu     [97m[40m 3[30m[46mView     [97m[40m 4[30m[46mEdit     [97m[40m 5[30m[46mCopy     [97m[40m 6[30m[46mRenMov   [97m[40m 7[30m[46mMkdir    [97m[40m 8[30m[46mDelete   [97m[40m 9[30m[46mPullDn   [97m[40m10[30m[46mQuit[K[45;109H]0;mc [root@lvm]:/>]0;mc [root@lvm]:/>[1;1H  Left     File     Command     Options     Right[K[2;55H[37m[44m┌<─ / ───────────────────────────────────────────.[^]>┐[3;2H[93m'n            Name             [37m│[93m Size  [37m│[93mModify time [37m││[93m'n            Name              [37m│[93m Size  [37m│[93mModify time [37m│[4;55H│[97m~bin                            [37m│[97m      7[37m│[97mFeb 24 12:01[37m│[5;55H│[97m/boot                           [37m│[97m   4096[37m│[97mFeb 24 12:03[37m│[6;55H│[97m/dev                            [37m│[97m   3060[37m│[97mFeb 24 12:16[37m│[7;55H│[97m/etc                            [37m│[97m   8192[37m│[97mFeb 24 11:55[37m│[8;55H│[97m/home                           [37m│[97m      6[37m│[97mFeb 24 12:17[37m│[9;55H│[97m~lib                            [37m│[97m      7[37m│[97mFeb 24 12:01[37m│[10;55H│[97m~lib64                          [37m│[97m      9[37m│[97mFeb 24 12:01[37m│[11;55H│[97m/media                          [37m│[97m      6[37m│[97mApr 11  2018[37m│[12;55H│[97m/mnt                            [37m│[97m     21[37m│[97mFeb 24 12:17[37m│[13;55H│[97m/opt                            [37m│[97m      6[37m│[97mApr 11  2018[37m│[14;55H│[97m/proc                           [37m│[97m      0[37m│[97mFeb 24  2020[37m│[15;55H│[97m/root                           [37m│[97m    213[37m│[97mFeb 24 10:25[37m│[16;55H│[97m/run                            [37m│[97m    660[37m│[97mFeb 24 12:14[37m│[17;55H│[97m~sbin                           [37m│[97m      8[37m│[97mFeb 24 12:01[37m│[18;55H│[97m/srv                            [37m│[97m      6[37m│[97mApr 11  2018[37m│[19;55H│[97m/sys                            [37m│[97m      0[37m│[97mFeb 24 12:11[37m│[20;55H│[97m/tmp                            [37m│[97m   4096[37m│[97mFeb 24 12:12[37m│[21;55H│[97m/usr                            [37m│[97m    155[37m│[97mMay 12  2018[37m│[22;55H│[97m/vagrant                        [37m│[97m     42[37m│[97mFeb 24 09:50[37m│[23;55H│[97m/var                            [37m│[97m   4096[37m│[97mFeb 24 12:11[37m│[24;55H│                                │       │            │[25;55H│                                │       │            │[26;55H│                                │       │            │[27;55H│                                │       │            │[28;55H│                                │       │            │[29;55H│                                │       │            │[30;55H│                                │       │            │[31;55H│                                │       │            │[32;55H│                                │       │            │[33;55H│                                │       │            │[34;55H│                                │       │            │[35;55H│                                │       │            │[36;55H│                                │       │            │[37;55H│                                │       │            │[38;55H│                                │       │            │[39;55H│                                │       │            │[40;55H│                                │       │            │[41;55H│                                │       │            │[42;2H────────────────────────────────────────────────────┤├─────────────────────────────────────────────────────┤[43;2H-> usr/bin                                          ││-> usr/bin                                           │[44;55H└───────────────────────────────── 7369M/8182M (90%) ─┘[46;107H[^][46;15H[46;11H[39m[49m/[46;15H[4;2H[97m[44m~bin                           [37m│[97m      7[37m│[97mFeb 24 12:01[5;2H[30m[46m/boot                          │   4096│Feb 24 12:03[43;2H[37m[44m/boot     [46;15H[5;2H[97m/boot                          [37m│[97m   4096[37m│[97mFeb 24 12:03[6;2H[30m[46m/dev                           │   3060│Feb 24 12:16[43;3H[37m[44mdev [46;15H[6;2H[97m/dev                           [37m│[97m   3060[37m│[97mFeb 24 12:16[7;2H[30m[46m/etc                           │   8192│Feb 24 11:55[43;3H[37m[44metc[46;15H[7;2H[97m/etc                           [37m│[97m   8192[37m│[97mFeb 24 11:55[8;2H[30m[46m/home                          │      6│Feb 24 12:17[43;3H[37m[44mhome[46;15H[8;2H[97m/home                          [37m│[97m      6[37m│[97mFeb 24 12:17[9;2H[30m[46m~lib                           │      7│Feb 24 12:01[43;2H[37m[44m-> u 2018[37m│[12;55H│[97m/mnt                            [37m│[97m     21[37m│[97mFeb 24 12:17[37m│[13;55H│[97m/opt                            [37m│[97m      6[37m│[97mApr 11  2018[37m│[14;55H│[97m/proc                           [37m│[97m      0[37m│[97mFeb 24  2020[37m│[15;55H│[97m/root                           [37m│[97m    213[37m│[97mFeb 24 10:25[37m│[16;55H│[97m/run                            [37m│[97m    660[37m│[97mFeb 24 12:14[37m│[17;55H│[97m~sbin                           [37m│[97m      8[37m│[97mFeb 24 12:01[37m│[18;55H│[97m/srv                            [37m│[97m      6[37m│[97mApr 11  2018[37m│[19;55H│[97m/sys                            [37m│[97m      0[37m│[97mFeb 24 12:11[37m│[20;55H│[97m/tmp                            [37m│[97m   4096[37m│[97mFeb 24 12:12[37m│[21;55H│[97m/usr                            [37m│[97m    155[37m│[97mMay 12  2018[37m│[22;55H│[97m/vagrant                        [37m│[97m     42[37m│[97mFeb 24 09:50[37m│[23;55H│[97m/var                            [37m│[97m   4096[37m│[97mFeb 24 12:11[37m│[24;55H│                                │       │            │[25;55H│                                │       │            │[26;55H│                                │       │            │[27;55H│                                │       │            │[28;55H│                                │       │            │[29;55H│                                │       │            │[30;55H│                                │       │            │[31;55H│                                │       │            │[32;55H│                                │       │            │[33;55H│                                │       │            │[34;55H│                                │       │            │[35;55H│                                │       │            │[36;55H│                                │       │            │[37;55H│                                │       │            │[38;55H│                                │       │            │[39;55H│                                │       │            │[40;55H│                                │       │            │[41;55H│                                │       │            │[42;2H────────────────────────────────────────────────────┤├─────────────────────────────────────────────────────┤[43;2H-> usr/bin                                          ││-> usr/bin                                           │[44;55H└───────────────────────────────── 7369M/8182M (90%) ─┘[46;107H[^][46;15H[46;11H[39m[49m/[46;15H[4;2H[97m[44m~bin                           [37m│[97m      7[37m│[97mFeb 24 12:01[5;2H[30m[46m/boot                          │   4096│Feb 24 12:03[43;2H[37m[44m/boot     [46;15H[5;2H[97m/boot                          [37m│[97m   4096[37m│[97mFeb 24 12:03[6;2H[30m[46m/dev                           │   3060│Feb 24 12:16[43;3H[37m[44mdev [46;15H[6;2H[97m/dev                           [37m│[97m   3060[37m│[97mFeb 24 12:16[7;2H[30m[46m/etc                           │   8192│Feb 24 11:55[43;3H[37m[44metc[46;15H[7;2H[97m/etc                           [37m│[97m   8192[37m│[97mFeb 24 11:55[8;2H[30m[46m/home                          │      6│Feb 24 12:17[43;3H[37m[44mhome[46;15H[8;2H[97m/home                          [37m│[97m      6[37m│[97mFeb 24 12:17[9;2H[30m[46m~lib                           │      7│Feb 24 12:01[43;2H[37m[44m-> usr/lib[46;15H[8;2H[30m[46m/home                          │      6│Feb 24 12:17[9;2H[97m[44m~lib                           [37m│[97m      7[37m│[97mFeb 24 12:01[43;2H[37m/home     [46;15H]0;mc [root@lvm]:/home>[2;6H[30m[47mhome [4;2H[46m/..                            │UP--DIR│Feb 24 12:01[5;2H[37m[44m                               │       │            [6;2H                               │       │            [7;2H                               │       │            [8;2H                               │       │            [9;2H                               │       │            [10;2H                               │       │            [11;2H                               │       │            [12;2H                               │       │            [13;2H                               │       │            [14;2H                               │       │            [15;2H                               │       │            [16;2H                               │       │            [17;2H                               │       │            [18;2H                               │       │            [19;2H                               │       │            [20;2H                               │       │            [21;2H                               │       │            [22;2H                               │       │            [23;2H                               │       │            [43;2HUP--DIR[46;15H[46;11H[39m[49mhome]#[90C[46;18H]0;mc [root@lvm]:/>[2;6H[30m[47m [37m[44m────[4;2H[97m~bin                           [37m│[97m      7[37m│[97mFeb 24 12:01[5;2H/boot                          [37m│[97m   4096[37m│[97mFeb 24 12:03[6;2H/dev                           [37m│[97m   3060[37m│[97mFeb 24 12:16[7;2H/etc                           [37m│[97m   8192[37m│[97mFeb 24 11:55[8;2H[30m[46m/home                          │      6│Feb 24 12:17[9;2H[97m[44m~lib                           [37m│[97m      7[37m│[97mFeb 24 12:01[10;2H~lib64                         [37m│[97m      9[37m│[97mFeb 24 12:01[11;2H/media                         [37m│[97m      6[37m│[97mApr 11  2018[12;2H/mnt                           [37m│[97m     21[37m│[97mFeb 24 12:17[13;2H/opt                           [37m│[97m      6[37m│[97mApr 11  2018[14;2H/proc                          [37m│[97m      0[37m│[97mFeb 24  2020[15;2H/root                          [37m│[97m    213[37m│[97mFeb 24 10:25[16;2H/run                           [37m│[97m    660[37m│[97mFeb 24 12:14[17;2H~sbin                          [37m│[97m      8[37m│[97mFeb 24 12:01[18;2H/srv                           [37m│[97m      6[37m│[97mApr 11  2018[19;2H/sys                           [37m│[97m      0[37m│[97mFeb 24 12:11[20;2H/tmp                           [37m│[97m   4096[37m│[97mFeb 24 12:12[21;2H/usr                           [37m│[97m    155[37m│[97mMay 12  2018[22;2H/vagrant                       [37m│[97m     42[37m│[97mFeb 24 09:50[23;2H/var                           [37m│[97m   4096[37m│[97mFeb 24 12:11[43;2H[37m/home  [46;18H[46;11H[39m[49m/]#   [90C[46;15H[14;27H[30m[47m                                                        [15;27H ┌──────────────[34m The Midnight Commander [30m──────────────┐ [16;27H │ Do you really want to quit the Midnight Commander? │ [17;27H ├────────────────────────────────────────────────────┤ [18;27H │                  [46m[ [34mY[30mes ][47m  [ [34mN[30mo ]                   │ [19;27H └────────────────────────────────────────────────────┘ [20;27H                    sr/lib[46;15H[8;2H[30m[46m/home                          │      6│Feb 24 12:17[9;2H[97m[44m~lib                           [37m│[97m      7[37m│[97mFeb 24 12:01[43;2H[37m/home     [46;15H]0;mc [root@lvm]:/home>[2;6H[30m[47mhome [4;2H[46m/..                            │UP--DIR│Feb 24 12:01[5;2H[37m[44m                               │       │            [6;2H                               │       │            [7;2H                               │       │            [8;2H                               │       │            [9;2H                               │       │            [10;2H                               │       │            [11;2H                               │       │            [12;2H                               │       │            [13;2H                               │       │            [14;2H                               │       │            [15;2H                               │       │            [16;2H                               │       │            [17;2H                               │       │            [18;2H                               │       │            [19;2H                               │       │            [20;2H                               │       │            [21;2H                               │       │            [22;2H                               │       │            [23;2H                               │       │            [43;2HUP--DIR[46;15H[46;11H[39m[49mhome]#[90C[46;18H]0;mc [root@lvm]:/>[2;6H[30m[47m [37m[44m────[4;2H[97m~bin                           [37m│[97m      7[37m│[97mFeb 24 12:01[5;2H/boot                          [37m│[97m   4096[37m│[97mFeb 24 12:03[6;2H/dev                           [37m│[97m   3060[37m│[97mFeb 24 12:16[7;2H/etc                           [37m│[97m   8192[37m│[97mFeb 24 11:55[8;2H[30m[46m/home                          │      6│Feb 24 12:17[9;2H[97m[44m~lib                           [37m│[97m      7[37m│[97mFeb 24 12:01[10;2H~lib64                         [37m│[97m      9[37m│[97mFeb 24 12:01[11;2H/media                         [37m│[97m      6[37m│[97mApr 11  2018[12;2H/mnt                           [37m│[97m     21[37m│[97mFeb 24 12:17[13;2H/opt                           [37m│[97m      6[37m│[97mApr 11  2018[14;2H/proc                          [37m│[97m      0[37m│[97mFeb 24  2020[15;2H/root                          [37m│[97m    213[37m│[97mFeb 24 10:25[16;2H/run                           [37m│[97m    660[37m│[97mFeb 24 12:14[17;2H~sbin                          [37m│[97m      8[37m│[97mFeb 24 12:01[18;2H/srv                           [37m│[97m      6[37m│[97mApr 11  2018[19;2H/sys                           [37m│[97m      0[37m│[97mFeb 24 12:11[20;2H/tmp                           [37m│[97m   4096[37m│[97mFeb 24 12:12[21;2H/usr                           [37m│[97m    155[37m│[97mMay 12  2018[22;2H/vagrant                       [37m│[97m     42[37m│[97mFeb 24 09:50[23;2H/var                           [37m│[97m   4096[37m│[97mFeb 24 12:11[43;2H[37m/home  [46;18H[46;11H[39m[49m/]#   [90C[46;15H[14;27H[30m[47m                                                        [15;27H ┌──────────────[34m The Midnight Commander [30m──────────────┐ [16;27H │ Do you really want to quit the Midnight Commander? │ [17;27H ├────────────────────────────────────────────────────┤ [18;27H │                  [46m[ [34mY[30mes ][47m  [ [34mN[30mo ]                   │ [19;27H └────────────────────────────────────────────────────┘ [20;27H                                       [18;49H[45;7H[39m[49mTo mark directories on the select dialog box, append a slash.[K[45;109H[1;1H[K
+]0;root@lvm:/[root@lvm /]# umount /mnt
+]0;root@lvm:/[root@lvm /]# mount /dev/VolGroup00/LogVol_Home /home/
+]0;root@lvm:/[root@lvm /]# echo "`blkid | grep Home | awk '{print $2}'` /home xfs defaults 0 0" >> /etc/fstab
+]0;root@lvm:/[root@lvm /]# tou[K[K[Kmc
+│[52C│
+│[30m[46m~bin                           │      7│Feb 24 12:01[37m[44m│
+│[97m/boot                          [37m│[97m   4096[37m│[97mFeb 24 12:03[37m│
+│[97m/dev                           [37m│[97m   3060[37m│[97mFeb 24 12:16[37m│
+│[97m/etc                           [37m│[97m   8192[37m│[97mFeb 24 11:55[37m│
+│[97m/home                          [37m│[97m     21[37m│[97mFeb 24 12:17[37m│
+│[97m~lib                           [37m│[97m      7[37m│[97mFeb 24 12:01[37m│
+│[97m~lib64                         [37m│[97m      9[37m│[97mFeb 24 12:01[37m│
+│[97m/media                         [37m│[97m      6[37m│[97mApr 11  2018[37m│
+│[97m/mnt                           [37m│[97m      6[37m│[97mApr 11  2018[37m│
+│[97m/opt                           [37m│[97m      6[37m│[97mApr 11  2018[37m│
+│[97m/proc                          [37m│[97m      0[37m│[97mFeb 24  2020[37m│
+│[97m/root                          [37m│[97m    213[37m│[97mFeb 24 10:25[37m│
+│[97m/run                           [37m│[97m    680[37m│[97mFeb 24 12:18[37m│
+│[97m~sbin                          [37m│[97m      8[37m│[97mFeb 24 12:01[37m│
+│[97m/srv                           [37m│[97m      6[37m│[97mApr 11  2018[37m│
+│[97m/sys                           [37m│[97m      0[37m│[97mFeb 24 12:11[37m│
+│[97m/tmp                           [37m│[97m   4096[37m│[97mFeb 24 12:12[37m│
+│[97m/usr                           [37m│[97m    155[37m│[97mMay 12  2018[37m│
+│[97m/vagrant                       [37m│[97m     42[37m│[97mFeb 24 09:50[37m│
+│[97m/var                           [37m│[97m   4096[37m│[97mFeb 24 12:11[37m│
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       �                                                     [18;49H[45;7H[39m[49mTo mark directories on the select dialog box, append a slash.[K[45;109H[1;1H[K
+[K[1;109H[?1015l[?1002l[?1001r[?1l>[47;1H(B[m[39;49m[K[?1049l[?47l8[m[39;49m
+]0;root@lvm:/[root@lvm /]# umount /mnt
+]0;root@lvm:/[root@lvm /]# mount /dev/VolGroup00/LogVol_Home /home/
+]0;root@lvm:/[root@lvm /]# echo "`blkid | grep Home | awk '{print $2}'` /home xfs defaults 0 0" >> /etc/fstab
+]0;root@lvm:/[root@lvm /]# tou[K[K[Kmc
+│[52C│
+│[30m[46m~bin                           │      7│Feb 24 12:01[37m[44m│
+│[97m/boot                          [37m│[97m   4096[37m│[97mFeb 24 12:03[37m│
+│[97m/dev                           [37m│[97m   3060[37m│[97mFeb 24 12:16[37m│
+│[97m/etc                           [37m│[97m   8192[37m│[97mFeb 24 11:55[37m│
+│[97m/home                          [37m│[97m     21[37m│[97mFeb 24 12:17[37m│
+│[97m~lib                           [37m│[97m      7[37m│[97mFeb 24 12:01[37m│
+│[97m~lib64                         [37m│[97m      9[37m│[97mFeb 24 12:01[37m│
+│[97m/media                         [37m│[97m      6[37m│[97mApr 11  2018[37m│
+│[97m/mnt                           [37m│[97m      6[37m│[97mApr 11  2018[37m│
+│[97m/opt                           [37m│[97m      6[37m│[97mApr 11  2018[37m│
+│[97m/proc                          [37m│[97m      0[37m│[97mFeb 24  2020[37m│
+│[97m/root                          [37m│[97m    213[37m│[97mFeb 24 10:25[37m│
+│[97m/run                           [37m│[97m    680[37m│[97mFeb 24 12:18[37m│
+│[97m~sbin                          [37m│[97m      8[37m│[97mFeb 24 12:01[37m│
+│[97m/srv                           [37m│[97m      6[37m│[97mApr 11  2018[37m│
+│[97m/sys                           [37m│[97m      0[37m│[97mFeb 24 12:11[37m│
+│[97m/tmp                           [37m│[97m   4096[37m│[97mFeb 24 12:12[37m│
+│[97m/usr                           [37m│[97m    155[37m│[97mMay 12  2018[37m│
+│[97m/vagrant                       [37m│[97m     42[37m│[97mFeb 24 09:50[37m│
+│[97m/var                           [37m│[97m   4096[37m│[97mFeb 24 12:11[37m│
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                               │       │            │
+│                         ��            │
+├[52C┤
+│[52C│
+└──────────────────────────────── 7369M/8182M (90%) ─┘
+[39m[49mHint: You can specify the username when doing ftps: 'cd ftp://user@machine.edu'
+
+[97m[40m 1[30m[46mHelp    [97m[40m 2[30m[46mMenu     [97m[40m 3[30m[46mView     [97m[40m 4[30m[46mEdit     [97m[40m 5[30m[46mCopy     [97m[40m 6[30m[46mRenMov   [97m[40m 7[30m[46mMkdir    [97m[40m 8[30m[46mDelete   [97m[40m 9[30m[46mPullDn   [97m[40m10[30m[46mQuit[K[45;109H]0;mc [root@lvm]:/>]0;mc [root@lvm]:/>[1;1H  Left     File     Command     Options     Right[K[2;55H[37m[44m┌<─ / ───────────────────────────────────────────.[^]>┐[3;2H[93m'n            Name             [37m│[93m Size  [37m│[93mModify time [37m││[93m'n            Name              [37m│[93m Size  [37m│[93mModify time [37m│[4;55H│[97m~bin                            [37m│[97m      7[37m│[97mFeb 24 12:01[37m│[5;55H│[97m/boot                           [37m│[97m   4096[37m│[97mFeb 24 12:03[37m│[6;55H│[97m/dev                            [37m│[97m   3060[37m│[97mFeb 24 12:16[37m│[7;55H│[97m/etc                            [37m│[97m   8192[37m│[97mFeb 24 11:55[37m│[8;55H│[97m/home                           [37m│[97m     21[37m│[97mFeb 24 12:17[37m│[9;55H│[97m~lib                            [37m│[97m      7[37m│[97mFeb 24 12:01[37m│[10;55H│[97m~lib64                          [37m│[97m      9[37m│[97mFeb 24 12:01[37m│[11;55H│[97m/media                          [37m│[97m      6[37m│[97mApr 11  2018[37m│[12;55H│[97m/mnt                            [37m│[97m      6[37m│[97mApr 11  2018[37m│[13;55H│[97m/opt                            [37m│[97m      6[37m│[97mApr 11  2018[37m│[14;55H│[97m/proc                           [37m│[97m      0[37m│[97mFeb 24  2020[37m│[15;55H│[97m/root                           [37m│[97m    213[37m│[97mFeb 24 10:25[37m│[16;55H│[97m/run                            [37m│[97m    680[37m│[97mFeb 24 12:18[37m│[17;55H│[97m~sbin                           [37m│[97m      8[37m│[97mFeb 24 12:01[37m│[18;55H│[97m/srv                            [37m│[97m      6[37m│[97mApr 11  2018[37m│[19;55H│[97m/sys                            [37m│[97m      0[37m│[97mFeb 24 12:11[37m│[20;55H│[97m/tmp                            [37m│[97m   4096[37m│[97mFeb 24 12:12[37m│[21;55H│[97m/usr                            [37m│[97m    155[37m│[97mMay 12  2018[37m│[22;55H│[97m/vagrant                        [37m│[97m     42[37m│[97mFeb 24 09:50[37m│[23;55H│[97m/var                            [37m│[97m   4096[37m│[97mFeb 24 12:11[37m│[24;55H│                                │       │            │[25;55H│                                │       │            │[26;55H│                                │       │            │[27;55H│                                │       │            │[28;55H│                                │       │            │[29;55H│                                │       │            │[30;55H│                                │       │            │[31;55H│                                │       │            │[32;55H│                                │       │            │[33;55H│                                │       │            │[34;55H│                                │       │            │[35;55H│                                │       │            │[36;55H│                                │       │            │[37;55H│                                │       │            │[38;55H│                                │       �      │       │            │
+├[52C┤
+│[52C│
+└──────────────────────────────── 7369M/8182M (90%) ─┘
+[39m[49mHint: You can specify the username when doing ftps: 'cd ftp://user@machine.edu'
+
+[97m[40m 1[30m[46mHelp    [97m[40m 2[30m[46mMenu     [97m[40m 3[30m[46mView     [97m[40m 4[30m[46mEdit     [97m[40m 5[30m[46mCopy     [97m[40m 6[30m[46mRenMov   [97m[40m 7[30m[46mMkdir    [97m[40m 8[30m[46mDelete   [97m[40m 9[30m[46mPullDn   [97m[40m10[30m[46mQuit[K[45;109H]0;mc [root@lvm]:/>]0;mc [root@lvm]:/>[1;1H  Left     File     Command     Options     Right[K[2;55H[37m[44m┌<─ / ───────────────────────────────────────────.[^]>┐[3;2H[93m'n            Name             [37m│[93m Size  [37m│[93mModify time [37m││[93m'n            Name              [37m│[93m Size  [37m│[93mModify time [37m│[4;55H│[97m~bin                            [37m│[97m      7[37m│[97mFeb 24 12:01[37m│[5;55H│[97m/boot                           [37m│[97m   4096[37m│[97mFeb 24 12:03[37m│[6;55H│[97m/dev                            [37m│[97m   3060[37m│[97mFeb 24 12:16[37m│[7;55H│[97m/etc                            [37m│[97m   8192[37m│[97mFeb 24 11:55[37m│[8;55H│[97m/home                           [37m│[97m     21[37m│[97mFeb 24 12:17[37m│[9;55H│[97m~lib                            [37m│[97m      7[37m│[97mFeb 24 12:01[37m│[10;55H│[97m~lib64                          [37m│[97m      9[37m│[97mFeb 24 12:01[37m│[11;55H│[97m/media                          [37m│[97m      6[37m│[97mApr 11  2018[37m│[12;55H│[97m/mnt                            [37m│[97m      6[37m│[97mApr 11  2018[37m│[13;55H│[97m/opt                            [37m│[97m      6[37m│[97mApr 11  2018[37m│[14;55H│[97m/proc                           [37m│[97m      0[37m│[97mFeb 24  2020[37m│[15;55H│[97m/root                           [37m│[97m    213[37m│[97mFeb 24 10:25[37m│[16;55H│[97m/run                            [37m│[97m    680[37m│[97mFeb 24 12:18[37m│[17;55H│[97m~sbin                           [37m│[97m      8[37m│[97mFeb 24 12:01[37m│[18;55H│[97m/srv                            [37m│[97m      6[37m│[97mApr 11  2018[37m│[19;55H│[97m/sys                            [37m│[97m      0[37m│[97mFeb 24 12:11[37m│[20;55H│[97m/tmp                            [37m│[97m   4096[37m│[97mFeb 24 12:12[37m│[21;55H│[97m/usr                            [37m│[97m    155[37m│[97mMay 12  2018[37m│[22;55H│[97m/vagrant                        [37m│[97m     42[37m│[97mFeb 24 09:50[37m│[23;55H│[97m/var                            [37m│[97m   4096[37m│[97mFeb 24 12:11[37m│[24;55H│                                │       │            │[25;55H│                                │       │            │[26;55H│                                │       │            │[27;55H│                                │       │            │[28;55H│                                │       │            │[29;55H│                                │       │            │[30;55H│                                │       │            │[31;55H│                                │       │            │[32;55H│                                │       │            │[33;55H│                                │       │            │[34;55H│                                │       │            │[35;55H│                                │       │            │[36;55H│                                │       │            │[37;55H│                                │       │            │[38;55H│                           �            │[39;55H│                                │       │            │[40;55H│                                │       │            │[41;55H│                                │       │            │[42;2H────────────────────────────────────────────────────┤├─────────────────────────────────────────────────────┤[43;2H-> usr/bin                                          ││-> usr/bin                                           │[44;55H└───────────────────────────────── 7369M/8182M (90%) ─┘[46;106H[39m[49m[1K [37m[44m[^][46;1H[39m[49m[root@lvm /]#[93C[46;15H[4;2H[97m[44m~bin                           [37m│[97m      7[37m│[97mFeb 24 12:01[5;2H[30m[46m/boot                          │   4096│Feb 24 12:03[43;2H[37m[44m/boot     [46;15H[4;2H[30m[46m~bin                           │      7│Feb 24 12:01[5;2H[97m[44m/boot                          [37m│[97m   4096[37m│[97mFeb 24 12:03[43;2H[37m-> usr/bin[46;15H[4;2H[97m~bin                           [37m│[97m      7[37m│[97mFeb 24 12:01[5;2H[30m[46m/boot                          │   4096│Feb 24 12:03[43;2H[37m[44m/boot     [46;15H[5;2H[97m/boot                          [37m│[97m   4096[37m│[97mFeb 24 12:03[6;2H[30m[46m/dev                           │   3060│Feb 24 12:16[43;3H[37m[44mdev [46;15H[6;2H[97m/dev                           [37m│[97m   3060[37m│[97mFeb 24 12:16[7;2H[30m[46m/etc                           │   8192│Feb 24 11:55[43;3H[37m[44metc[46;15H[7;2H[97m/etc                           [37m│[97m   8192[37m│[97mFeb 24 11:55[8;2H[30m[46m/home                          │     21│Feb 24 12:17[43;3H[37m[44mhome[46;15H]0;mc [root@lvm]:/home>[2;6H[30m[47mhome [4;2H[46m/..                            │UP--DIR│Feb 24 12:01[5;3H[97m[44mvagrant[27C 138[9C1:24[6;2H[37m                               │       │            [7;2H                               │       │            [8;2H                               │       │            [9;2H                               │       │            [10;2H                               │       │            [11;2H                               │       │            [12;2H                               │       │            [13;2H                               │       │            [14;2H                               │       │            [15;2H                               │       │            [16;2H                               │       │            [17;2H                               │       │            [18;2H                               │       │            [19;2H                               │       │            [20;2H                               │       │            [21;2H                               │       │            [22;2H                               │       │            [23;2H                               │       │            [43;2HUP--DIR[44;35H2006M/2038M (98[46;15H[46;11H[39m[49mhome]#[90C[46;18H]0;mc [root@lvm]:/>[2;6H[30m[47m [37m[44m────[4;2H[97m~bin                           [37m│[97m      7[37m│[97mFeb 24 12:01[5;3Hboot   [27C4096[9C2:03[6;2H/dev                           [37m│[97m   3060[37m│[97mFeb 24 12:16[7;2H/etc                           [37m│[97m   8192[37m│[97mFeb 24 11:55[8;2H[30m[46m/home                          │     21│Feb 24 12:17[9;2H[97m[44m~lib                           [37m│[97m      7[37m│[97mFeb 24 12:01[10;2H~lib64                         [37m│[97m      9[37m│[97mFeb 24 12:01[11;2H/media                         [37m│[97m      6[37m│[97mApr 11  2018[12;2H     │       │            │[39;55H│                                │       │            │[40;55H│                                │       │            │[41;55H│                                │       │            │[42;2H────────────────────────────────────────────────────┤├─────────────────────────────────────────────────────┤[43;2H-> usr/bin                                          ││-> usr/bin                                           │[44;55H└───────────────────────────────── 7369M/8182M (90%) ─┘[46;106H[39m[49m[1K [37m[44m[^][46;1H[39m[49m[root@lvm /]#[93C[46;15H[4;2H[97m[44m~bin                           [37m│[97m      7[37m│[97mFeb 24 12:01[5;2H[30m[46m/boot                          │   4096│Feb 24 12:03[43;2H[37m[44m/boot     [46;15H[4;2H[30m[46m~bin                           │      7│Feb 24 12:01[5;2H[97m[44m/boot                          [37m│[97m   4096[37m│[97mFeb 24 12:03[43;2H[37m-> usr/bin[46;15H[4;2H[97m~bin                           [37m│[97m      7[37m│[97mFeb 24 12:01[5;2H[30m[46m/boot                          │   4096│Feb 24 12:03[43;2H[37m[44m/boot     [46;15H[5;2H[97m/boot                          [37m│[97m   4096[37m│[97mFeb 24 12:03[6;2H[30m[46m/dev                           │   3060│Feb 24 12:16[43;3H[37m[44mdev [46;15H[6;2H[97m/dev                           [37m│[97m   3060[37m│[97mFeb 24 12:16[7;2H[30m[46m/etc                           │   8192│Feb 24 11:55[43;3H[37m[44metc[46;15H[7;2H[97m/etc                           [37m│[97m   8192[37m│[97mFeb 24 11:55[8;2H[30m[46m/home                          │     21│Feb 24 12:17[43;3H[37m[44mhome[46;15H]0;mc [root@lvm]:/home>[2;6H[30m[47mhome [4;2H[46m/..                            │UP--DIR│Feb 24 12:01[5;3H[97m[44mvagrant[27C 138[9C1:24[6;2H[37m                               │       │            [7;2H                               │       │            [8;2H                               │       │            [9;2H                               │       │            [10;2H                               │       │            [11;2H                               │       │            [12;2H                               │       │            [13;2H                               │       │            [14;2H                               │       │            [15;2H                               │       │            [16;2H                               │       │            [17;2H                               │       │            [18;2H                               │       │            [19;2H                               │       │            [20;2H                               │       │            [21;2H                               │       │            [22;2H                               │       │            [23;2H                               │       │            [43;2HUP--DIR[44;35H2006M/2038M (98[46;15H[46;11H[39m[49mhome]#[90C[46;18H]0;mc [root@lvm]:/>[2;6H[30m[47m [37m[44m────[4;2H[97m~bin                           [37m│[97m      7[37m│[97mFeb 24 12:01[5;3Hboot   [27C4096[9C2:03[6;2H/dev                           [37m│[97m   3060[37m│[97mFeb 24 12:16[7;2H/etc                           [37m│[97m   8192[37m│[97mFeb 24 11:55[8;2H[30m[46m/home                          │     21│Feb 24 12:17[9;2H[97m[44m~lib                           [37m│[97m      7[37m│[97mFeb 24 12:01[10;2H~lib64                         [37m│[97m      9[37m│[97mFeb 24 12:01[11;2H/media                         [37m│[97m      6[37m│[97mAp/mnt                           [37m│[97m      6[37m│[97mApr 11  2018[13;2H/opt                           [37m│[97m      6[37m│[97mApr 11  2018[14;2H/proc                          [37m│[97m      0[37m│[97mFeb 24  2020[15;2H/root                          [37m│[97m    213[37m│[97mFeb 24 10:25[16;2H/run                           [37m│[97m    680[37m│[97mFeb 24 12:18[17;2H~sbin                          [37m│[97m      8[37m│[97mFeb 24 12:01[18;2H/srv                           [37m│[97m      6[37m│[97mApr 11  2018[19;2H/sys                           [37m│[97m      0[37m│[97mFeb 24 12:11[20;2H/tmp                           [37m│[97m   4096[37m│[97mFeb 24 12:12[21;2H/usr                           [37m│[97m    155[37m│[97mMay 12  2018[22;2H/vagrant                       [37m│[97m     42[37m│[97mFeb 24 09:50[23;2H/var                           [37m│[97m   4096[37m│[97mFeb 24 12:11[43;2H[37m/home  [44;35H7369M/8182M (90[46;18H[46;11H[39m[49m/]#   [90C[46;15H[14;27H[30m[47m                                                        [15;27H ┌──────────────[34m The Midnight Commander [30m──────────────┐ [16;27H │ Do you really want to quit the Midnight Commander? │ [17;27H ├────────────────────────────────────────────────────┤ [18;27H │                  [46m[ [34mY[30mes ][47m  [ [34mN[30mo ]                   │ [19;27H └────────────────────────────────────────────────────┘ [20;27H                                                        [18;49H[45;7H[39m[49mTab changes your current panel.[K[45;109H[1;1H[K
+]0;root@lvm:/[root@lvm /]# lsblk
+NAME                       MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                          8:0    0   40G  0 disk 
+├─sda1                       8:1    0    1M  0 part 
+├─sda2                       8:2    0    1G  0 part /boot
+└─sda3                       8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00    253:0    0    8G  0 lvm  /
+  ├─VolGroup00-LogVol01    253:1    0  1.5G  0 lvm  [SWAP]
+  └─VolGroup00-LogVol_Home 253:7    0    2G  0 lvm  /home
+sdb                          8:16   0   10G  0 disk 
+sdc                          8:32   0    2G  0 disk 
+├─vg_var-lv_var_rmeta_0    253:2    0    4M  0 lvm  
+│ └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_0   253:3    0  952M  0 lvm  
+  └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+sdd                          8:48   0    1G  0 disk 
+├─vg_var-lv_var_rmeta_1    253:4    0    4M  0 lvm  
+│ └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_1   253:5    0  952M  0 lvm  
+  └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+sde                          8:64   0    1G  0 disk 
+]0;root@lvm:/[root@lvm /]# touch /home/file{}1}.}.}2}0}[C
+]0;root@lvm:/[root@lvm /]# ll /f[Khome/
+total 0
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file1
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file10
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file11
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file12
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file13
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file14
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file15
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file16
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file17
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 fr 11  2018[12;2H/mnt                           [37m│[97m      6[37m│[97mApr 11  2018[13;2H/opt                           [37m│[97m      6[37m│[97mApr 11  2018[14;2H/proc                          [37m│[97m      0[37m│[97mFeb 24  2020[15;2H/root                          [37m│[97m    213[37m│[97mFeb 24 10:25[16;2H/run                           [37m│[97m    680[37m│[97mFeb 24 12:18[17;2H~sbin                          [37m│[97m      8[37m│[97mFeb 24 12:01[18;2H/srv                           [37m│[97m      6[37m│[97mApr 11  2018[19;2H/sys                           [37m│[97m      0[37m│[97mFeb 24 12:11[20;2H/tmp                           [37m│[97m   4096[37m│[97mFeb 24 12:12[21;2H/usr                           [37m│[97m    155[37m│[97mMay 12  2018[22;2H/vagrant                       [37m│[97m     42[37m│[97mFeb 24 09:50[23;2H/var                           [37m│[97m   4096[37m│[97mFeb 24 12:11[43;2H[37m/home  [44;35H7369M/8182M (90[46;18H[46;11H[39m[49m/]#   [90C[46;15H[14;27H[30m[47m                                                        [15;27H ┌──────────────[34m The Midnight Commander [30m──────────────┐ [16;27H │ Do you really want to quit the Midnight Commander? │ [17;27H ├────────────────────────────────────────────────────┤ [18;27H │                  [46m[ [34mY[30mes ][47m  [ [34mN[30mo ]                   │ [19;27H └────────────────────────────────────────────────────┘ [20;27H                                                        [18;49H[45;7H[39m[49mTab changes your current panel.[K[45;109H[1;1H[K
+]0;root@lvm:/[root@lvm /]# lsblk
+NAME                       MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                          8:0    0   40G  0 disk 
+├─sda1                       8:1    0    1M  0 part 
+├─sda2                       8:2    0    1G  0 part /boot
+└─sda3                       8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00    253:0    0    8G  0 lvm  /
+  ├─VolGroup00-LogVol01    253:1    0  1.5G  0 lvm  [SWAP]
+  └─VolGroup00-LogVol_Home 253:7    0    2G  0 lvm  /home
+sdb                          8:16   0   10G  0 disk 
+sdc                          8:32   0    2G  0 disk 
+├─vg_var-lv_var_rmeta_0    253:2    0    4M  0 lvm  
+│ └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_0   253:3    0  952M  0 lvm  
+  └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+sdd                          8:48   0    1G  0 disk 
+├─vg_var-lv_var_rmeta_1    253:4    0    4M  0 lvm  
+│ └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_1   253:5    0  952M  0 lvm  
+  └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+sde                          8:64   0    1G  0 disk 
+]0;root@lvm:/[root@lvm /]# touch /home/file{}1}.}.}2}0}[C
+]0;root@lvm:/[root@lvm /]# ll /f[Khome/
+total 0
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file1
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file10
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file11
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file12
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file13
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file14
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file15
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file16
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file17
+-rw-r--r--. 1 root    root     ile18
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file19
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file2
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file20
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file3
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file4
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file5
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file6
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file7
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file8
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file9
+drwx------. 6 vagrant vagrant 138 Feb 24 11:24 [0m[38;5;27mvagrant[0m
+]0;root@lvm:/[root@lvm /]# lvcreate -L 100MB -s -n nome[K[K[K[Khome_snap[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Klvcreate -L 100MB -s -n home_snap /dev/VolGroup00/LogVol_Home
+  Rounding up size to full physical extent 128.00 MiB
+  Logical volume "home_snap" created.
+]0;root@lvm:/[root@lvm /]# rm -f /home/file{11..20}
+]0;root@lvm:/[root@lvm /]# rm -f /home/file{11..20}[C[C[C[C[C[C[C[C[C[C[C[C[C[Clvcreate -L 100MB -s -n home_snap /dev/VolGroup00/LogVol_Home[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cl /home/[K
+total 0
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file1
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file10
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file2
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file3
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file4
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file5
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file6
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file7
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file8
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file9
+drwx------. 6 vagrant vagrant 138 Feb 24 11:24 [0m[38;5;27mvagrant[0m
+]0;root@lvm:/[root@lvm /]# umount /home
+]0;root@lvm:/[root@lvm /]# lvconvert --merge /dev/VolGroup00/home_snap
+  Merging of volume VolGroup00/home_snap started.
+  VolGroup00/LogVol_Home: Merged: 100.00%
+]0;root@lvm:/[root@lvm /]# mount /home
+]0;root@lvm:/[root@lvm /]# mount /homelvconvert --merge /dev/VolGroup00/home_snap[C[C[C[C[C[C[C[C[C[C[C[C[C[Cumount /home[K[3Pll /home/
+total 0
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file1
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file10
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file11
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file12
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file13
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file14
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file15
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file16
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file17
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file18
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file19
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file2
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file20
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file3
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file4
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file5
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file6
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file7
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file8
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file9
+drwx------. 6 vagrant vagrant 138 Feb 24 11:24 [0m[38;5;27mvagrant[0m
+]0;root@lvm:/[root@lvm /]# exit
+exit
+]0;vagrant@lvm:~[vagrant@lvm ~]$ exit
+logout
+Connection to 127.0.0.1 closed.
+]0;root@MSK-IT: /home/ayudin/stands-03-lvm-masterroot@MSK-IT:/home/ayudin/stands-03-lvm-master# mc
+[?1049h[22;0;0t[1;47r[4l[47;1H(B[m[37m[40m(B[m[39;49m[K[?1049l[23;0;0t[?1001s[?1002h[?1006h[?2004h[?1049h[22;0;0t[1;47r[4l[?1h=(B[m[39m[49m[1;47r[H[2J[2;108H[1K [37m[44m┐[2;109H]0;mc [root@MSK-IT]:/home/ayudin/stands-03-lvm-master>[45;1H[39m[49mHint: Want your plain shell? Press C-o, and get back to MC with C-o 0 Feb 24 12:20 file18
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file19
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file2
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file20
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file3
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file4
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file5
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file6
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file7
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file8
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file9
+drwx------. 6 vagrant vagrant 138 Feb 24 11:24 [0m[38;5;27mvagrant[0m
+]0;root@lvm:/[root@lvm /]# lvcreate -L 100MB -s -n nome[K[K[K[Khome_snap[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Klvcreate -L 100MB -s -n home_snap /dev/VolGroup00/LogVol_Home
+  Rounding up size to full physical extent 128.00 MiB
+  Logical volume "home_snap" created.
+]0;root@lvm:/[root@lvm /]# rm -f /home/file{11..20}
+]0;root@lvm:/[root@lvm /]# rm -f /home/file{11..20}[C[C[C[C[C[C[C[C[C[C[C[C[C[Clvcreate -L 100MB -s -n home_snap /dev/VolGroup00/LogVol_Home[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cl /home/[K
+total 0
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file1
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file10
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file2
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file3
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file4
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file5
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file6
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file7
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file8
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file9
+drwx------. 6 vagrant vagrant 138 Feb 24 11:24 [0m[38;5;27mvagrant[0m
+]0;root@lvm:/[root@lvm /]# umount /home
+]0;root@lvm:/[root@lvm /]# lvconvert --merge /dev/VolGroup00/home_snap
+  Merging of volume VolGroup00/home_snap started.
+  VolGroup00/LogVol_Home: Merged: 100.00%
+]0;root@lvm:/[root@lvm /]# mount /home
+]0;root@lvm:/[root@lvm /]# mount /homelvconvert --merge /dev/VolGroup00/home_snap[C[C[C[C[C[C[C[C[C[C[C[C[C[Cumount /home[K[3Pll /home/
+total 0
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file1
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file10
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file11
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file12
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file13
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file14
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file15
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file16
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file17
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file18
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file19
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file2
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file20
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file3
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file4
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file5
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file6
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file7
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file8
+-rw-r--r--. 1 root    root      0 Feb 24 12:20 file9
+drwx------. 6 vagrant vagrant 138 Feb 24 11:24 [0m[38;5;27mvagrant[0m
+]0;root@lvm:/[root@lvm /]# exit
+exit
+]0;vagrant@lvm:~[vagrant@lvm ~]$ exit
+logout
+Connection to 127.0.0.1 closed.
